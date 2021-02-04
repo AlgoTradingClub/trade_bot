@@ -58,11 +58,11 @@ here you go, so easy, so algo
 
 # Project status 
 - Still very much in progress
-- [] create a test folder
-- [] implement simple cli file
-- [] structure the folders in the 'best' way?  
-- [] import code from intelligent systems for data gathering from polygon
-- [] import code for finding pairs
+- [ ] create a test folder
+- [ ] implement simple cli file
+- [ ] structure the folders in the 'best' way?  
+- [ ] import code from intelligent systems for data gathering from polygon
+- [ ] import code for finding pairs
 
 # Sources
 This app is inspired by Andy Brim. You're the real MVP. 
