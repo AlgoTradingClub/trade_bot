@@ -7,6 +7,8 @@ This file could use the package pyCLI to automate the command line interface mak
 maybe using 'click' or 'fire'. They seem a bit more friendly than 'argparse'
 '''
 import click
+import os
+from helpers.cli_helper import *
 
 #  See https://zetcode.com/python/click/ for a good guide to working with click
 
@@ -26,11 +28,33 @@ def generic():
 
 @cli.command(name='wel')
 @click.argument('name', default='guest')
-def welcome(name):
+@click.option('-n', default=1, type=int, show_default=True)
+def welcome(name, n):
     """
     Sends a warm welcome!
     """
-    click.echo(f'Welcome, {name}')
+    click.echo(hello_world(name) * n)
+
+
+@cli.command(name="check_environ")
+def check_environment():
+    """
+    Check to see if the necessary environment variables are present
+    """
+    live_key = 'APCA_API_KEY_ID_LIVE'
+    if live_key in os.environ:
+        click.echo("Passed: Alpaca Live Key is in the environment variables")
+    else:
+        click.echo(f"Failed: '{live_key}' is not found in $PATH")
+
+@cli.command(name='poly')
+@click.option('-v', nargs=1, default='', type=str, help="Shows the last aggregate data point from the given stock ticker")
+@click.option('--u', is_flag=True, help="updates the CSV files with current data based on saved tickers in ... .txt")
+def polygon_cli(v, u):
+    if v:
+        click.echo(v)
+    if u:
+        click.echo(u)
 
 '''
 TODO commands to make:
