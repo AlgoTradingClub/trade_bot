@@ -1,6 +1,13 @@
 # USU Algo Club : Trading Bot 2021
 
 Agile Development club project. Agile methodology was chosen because it stresses adaptability over predictablility, testing alongside code development, and just enough documentation.
+- Highest priority is to satisfy the customer through early and continuous delivery of valuable software.
+- It welcomes changing requirements, even late in development.
+- Deliver working software frequently, from a couple of weeks to a couple of months, with a preference to the shortest timescale.
+- Build projects around motivated individuals. Give them the environment and the support they need, and trust them to get the job done.
+- Working software is the primary measure of progress.
+- Simplicity the art of maximizing the amount of work not done is essential.
+- The most efficient and effective method of conveying information to and within a development team is face-to-face conversation.
 
 ## Summary
 The why to what this project is.
