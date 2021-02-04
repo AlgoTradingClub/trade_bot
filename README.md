@@ -6,9 +6,15 @@ Apes Together!
 
 # Technologies
 - Python 3.8
+- Click 7.1
+- Requests 2.5.1
+- Pandas 1.2.1
+- polygon-api-client 0.1.9
 - 
 
 # Setup
+## Please work only in the `dev` branch
+
 To run this project:
 - Clone this repo
 - Sign up for an alpaca account
