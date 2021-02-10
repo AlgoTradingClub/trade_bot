@@ -13,18 +13,29 @@ Apes Together!
 - 
 
 # Setup
-## Please work only in the `dev` branch
+Add only by Pull Request. This paragraph should explain what that means.
 
-To run this project:
+## To run this project:
+
+Install Python and virtualenv
+- Install [Python](https://www.python.org/downloads/)
+- When installing python, click `add to path` option on the installation prompt.
+- Install virtualenv. These are separate coding enviornments that allow you to code with the same software dependancies and environment that I am coding in.
+```$ python -m pip install virtualenv```
+- Go to the folder
+
+Get the source code
+- Install [git](https://git-scm.com/)
 - Clone this repo
+```$ git clone https://github.com/AlgoTradingClub/trade-bot.git ```
 - Sign up for an alpaca account
 - Add your alpaca keys to the path variable for extra security
 	- Windows:
-		- Step 1
+		- Follow [these steps to install alpaca keys on the windows path](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/)
 	- Linux:
-		- Step 1
+		- Follow [these steps to install alpaca keys on Linux](https://phoenixnap.com/kb/linux-set-environment-variable)
 	- OS:
-		- Step 1
+		- Follow [these steps to install alpaca keys on Mac OS X](https://osxdaily.com/2015/07/28/set-enviornment-variables-mac-os-x/)
 - Set up blah blah
 - Run ```python manage.py run```
 
@@ -57,7 +68,7 @@ wow so easy to trade!
 here you go, so easy, so algo
 
 # Project status 
-- Still very much in progress
+## Still very much in progress
 - [ ] create a test folder
 - [ ] implement simple cli file
 - [ ] structure the folders in the 'best' way?  
