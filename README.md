@@ -35,9 +35,10 @@ Add only by Pull Request. This paragraph should explain what that means.
 ### Get the source code
 - Install [git](https://git-scm.com/)
 - Clone this repo into the folder `trading-bot-venv`
-```
-$ cd trading-bot-venv
-$ git clone https://github.com/AlgoTradingClub/trade-bot.git ```
+
+`$ cd trading-bot-venv`
+`$ git clone https://github.com/AlgoTradingClub/trade-bot.git`
+
 - Add the required dependancies. These libraries will only exist in this folder. Hence the name, a virtual environment.
 `$ python -m pip install -r trade-bot/requirements.txt`
 
