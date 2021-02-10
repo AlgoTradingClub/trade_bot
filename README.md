@@ -20,7 +20,7 @@ Add only by Pull Request. This paragraph should explain what that means.
 ### Install Python and virtualenv
 - Install [Python](https://www.python.org/downloads/)
 - When installing python, click `add to path` option on the installation prompt.
-- Install virtualenv. These are separate coding enviornments that allow you to code with the same software dependancies and environment that I am coding in. On windows, open `CMD`; on linux or mac, open `terminal`.
+- Install virtualenv. These are separate coding environments that allow you to code with the same software dependencies and environment that I am coding in. On Windows, open `CMD`; on linux or mac, open `terminal`.
 ```$ python -m pip install virtualenv```
 - Go to the location in your computer where you want to run the python program.
 - Run 
@@ -29,18 +29,17 @@ Add only by Pull Request. This paragraph should explain what that means.
 `$ cd trading-bot-venv`
 - Activate the virtual environment
 `$ source Scripts/activate
-- Whenever you see `(trading-bot-venv)` in parathesis after every command in terminal, you know you are in an activatd virtual environment. To leave a virtual environment, close the terminal or `$ deactivate`
-- Now, whenever you work on the project, activate the virtual environment before coding and you'll be good to go.
+- Whenever you see `(trading-bot-venv)` in parentheses after every command in terminal, you know you are in an activated virtual environment. To leave a virtual environment, close the terminal or `$ deactivate`
+- Now, whenever you work on the project, activate the virtual environment before coding, and you'll be good to go.
+- If you want to use PyCharm or another IDE, simply open the folder `trading-bot-venv` in the IDE, and it should recognize that you are using a virtual environment.
 
 ### Get the source code
 - Install [git](https://git-scm.com/)
 - Clone this repo into the folder `trading-bot-venv`
 
-`$ cd trading-bot-venv`
-
 `$ git clone https://github.com/AlgoTradingClub/trade-bot.git `
 
-- Add the required dependancies. These libraries will only exist in this folder. Hence the name, a virtual environment.
+- Add the required dependencies. These libraries will only exist in this folder. Hence, the name, a virtual environment.
 `$ python -m pip install -r trade-bot/requirements.txt`
 
 
@@ -82,7 +81,7 @@ Add only by Pull Request. This paragraph should explain what that means.
 
 
 # Features
-wow so easy to trade!
+wow, so easy to trade!
 - Moving average crossover
 - pairs trading
 - risky or non risky settings
@@ -92,7 +91,7 @@ wow so easy to trade!
 here you go, so easy, so algo
 
 # Project status 
-## Still very much in progress
+## Still, very much in progress
 - [ ] create a test folder
 - [ ] implement simple cli file
 - [x] structure the folders in the 'best' way?  
