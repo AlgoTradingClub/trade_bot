@@ -17,17 +17,31 @@ Add only by Pull Request. This paragraph should explain what that means.
 
 ## To run this project:
 
-Install Python and virtualenv
+### Install Python and virtualenv
 - Install [Python](https://www.python.org/downloads/)
 - When installing python, click `add to path` option on the installation prompt.
-- Install virtualenv. These are separate coding enviornments that allow you to code with the same software dependancies and environment that I am coding in.
+- Install virtualenv. These are separate coding enviornments that allow you to code with the same software dependancies and environment that I am coding in. On windows, open `CMD`; on linux or mac, open `terminal`.
 ```$ python -m pip install virtualenv```
-- Go to the folder
+- Go to the location in your computer where you want to run the python program.
+- Run 
+```$ python -m virtualenv trading-bot-venv```
+- Enter the project folder which was just created.
+`$ cd trading-bot-venv`
+- Activate the virtual environment
+`$ source Scripts/activate
+- Whenever you see `(trading-bot-venv)` in parathesis after every command in terminal, you know you are in an activatd virtual environment. To leave a virtual environment, close the terminal or `$ deactivate`
+- Now, whenever you work on the project, activate the virtual environment before coding and you'll be good to go.
 
-Get the source code
+### Get the source code
 - Install [git](https://git-scm.com/)
-- Clone this repo
-```$ git clone https://github.com/AlgoTradingClub/trade-bot.git ```
+- Clone this repo into the folder `trading-bot-venv`
+```
+$ cd trading-bot-venv
+$ git clone https://github.com/AlgoTradingClub/trade-bot.git ```
+- Add the required dependancies. These libraries will only exist in this folder. Hence the name, a virtual environment.
+`$ python -m pip install -r trade-bot/requirements.txt`
+
+
 - Sign up for an alpaca account
 - Add your alpaca keys to the path variable for extra security
 	- Windows:
@@ -36,8 +50,15 @@ Get the source code
 		- Follow [these steps to install alpaca keys on Linux](https://phoenixnap.com/kb/linux-set-environment-variable)
 	- OS:
 		- Follow [these steps to install alpaca keys on Mac OS X](https://osxdaily.com/2015/07/28/set-enviornment-variables-mac-os-x/)
-- Set up blah blah
-- Run ```python manage.py run```
+
+- When writing code, create a new branch:
+`$ git checkout -b myNewFeature`
+- After writing code, add and commit the code to git
+`$ git add .`
+`$ git commit -m "this is what i did"`
+- Then push your code to github
+`$ git push -u origin myNewFeature`
+- this will create a pull request that we will look over and add comments to. Go to https://github.com/AlgoTradingClub/trade-bot to see the pull request and add any additional comments. When someone has reviewed your pull request, then we can add it to the main branch of code.
 
 
 # Table of contents
