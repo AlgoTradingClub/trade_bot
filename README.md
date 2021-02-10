@@ -37,13 +37,15 @@ Add only by Pull Request. This paragraph should explain what that means.
 - Clone this repo into the folder `trading-bot-venv`
 
 `$ cd trading-bot-venv`
-`$ git clone https://github.com/AlgoTradingClub/trade-bot.git`
+
+`$ git clone https://github.com/AlgoTradingClub/trade-bot.git `
 
 - Add the required dependancies. These libraries will only exist in this folder. Hence the name, a virtual environment.
 `$ python -m pip install -r trade-bot/requirements.txt`
 
 
-- Sign up for an alpaca account
+### Sign up for an alpaca account 
+- After creating an account and getting a set of public and private alpaca api keys, follow these steps
 - Add your alpaca keys to the path variable for extra security
 	- Windows:
 		- Follow [these steps to install alpaca keys on the windows path](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/)
@@ -93,7 +95,7 @@ here you go, so easy, so algo
 ## Still very much in progress
 - [ ] create a test folder
 - [ ] implement simple cli file
-- [ ] structure the folders in the 'best' way?  
+- [x] structure the folders in the 'best' way?  
 - [ ] import code from intelligent systems for data gathering from polygon
 - [ ] import code for finding pairs
 
