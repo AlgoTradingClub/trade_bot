@@ -4,7 +4,17 @@ from datetime import datetime, timedelta
 from requests import exceptions
 import pandas as pd
 import time
+import re
 
+
+def verify_date_string(date: str) -> bool:
+    if not isinstance(date, str):
+        return False
+    pattern = re.compile(r"\d{4}-\d{2}-\d{2}")
+    if pattern.search(date):
+        return True
+    else:
+        return False
 
 class Poly:
     """
@@ -51,7 +61,7 @@ class Poly:
         start_date = datetime.strptime(from_date, "%Y-%m-%d")
         end_date = datetime.strptime(to_date, "%Y-%m-%d")
         print(f"Estimated time: {round((end_date - start_date).days * 1.7 / 30, 2)} seconds."
-              f"\nInternet may vary greatly")
+              f"\nInternet speed may vary greatly")
         repeat = 1
         days_change = 5
         # more than 5 days of minute data may be more than 5000 data points and polygon wont send more than that
@@ -93,3 +103,19 @@ class Poly:
         print(f"time to complete is {time.time() - start_time} s")
         df.reset_index(drop=True, inplace=True)
         return df
+
+    def get_daily_data(self, ticker_name: str, start_date: str, end_date: str) -> pd.DataFrame:
+        """
+        Get the daily open, close, high, low for a given stock. From what I see, it will go back until ~2003
+        NOt authorized to work with Crypto or Forex
+        """
+        if not (verify_date_string(start_date) and verify_date_string(end_date)):
+            print("The date string must be in the format of YYYY-MM-DD. Year-Month-Day")
+            return None
+
+        with RESTClient(self.__alpaca_key) as client:
+            resp = client.stocks_equities_aggregates(ticker_name, 1, "day", start_date, end_date)
+            for result in resp.results:
+                result['t'] = datetime.fromtimestamp(result["t"] / 1000).isoformat()
+
+            return pd.DataFrame.from_dict(resp.results)
