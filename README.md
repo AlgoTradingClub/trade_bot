@@ -23,12 +23,11 @@ Add only by Pull Request. This paragraph should explain what that means.
 - Install virtualenv. These are separate coding environments that allow you to code with the same software dependencies and environment that I am coding in. On Windows, open `CMD`; on linux or mac, open `terminal`.
 ```$ python -m pip install virtualenv```
 - Go to the location in your computer where you want to run the python program.
-- Run 
-```$ python -m virtualenv trading-bot-venv```
+- Run `$ python -m virtualenv trading-bot-venv`
 - Enter the project folder which was just created.
 `$ cd trading-bot-venv`
 - Activate the virtual environment
-`$ source Scripts/activate
+`$ source Scripts/activate`
 - Whenever you see `(trading-bot-venv)` in parentheses after every command in terminal, you know you are in an activated virtual environment. To leave a virtual environment, close the terminal or `$ deactivate`
 - Now, whenever you work on the project, activate the virtual environment before coding, and you'll be good to go.
 - If you want to use PyCharm or another IDE, simply open the folder `trading-bot-venv` in the IDE, and it should recognize that you are using a virtual environment.
