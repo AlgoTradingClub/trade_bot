@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from restapi_coinapi_io import CoinAPIv1
-import datetime, sys
+import datetime
 
 
 period_ids = {
@@ -15,6 +15,19 @@ period_ids = {
 
 
 class CoinAPI:
+    """
+    This API has access to 11003 crypto coins and more come out all the time. HODL BTC!
+    Something to be aware of if how crypto works. Since its sort of a currency, you have to compare it to a known
+    currency. For example, when you ask the price of bitcoin, you also need to tell the api what currency to compare it
+    to, i.e. USD.
+
+    So for the functions:
+        get_current_exchange_rate
+        get_date_exchange_rate
+        bars_latest_data
+        get_daily_data
+    The FIRST symbol, sym1, is the crypto, and the SECOND symbol, sym2, is the comparative currency.
+    """
     def __init__(self):
         try:
             self.api_key = os.environ['coinapi_io_key']
@@ -27,8 +40,41 @@ class CoinAPI:
         else:
             self.api = CoinAPIv1(self.api_key)
 
-    def get_daily_data(self, ticker_name: str, start_date: str, end_date: str) -> pd.DataFrame:
-        ...
+    def get_daily_data(self, ticker1: str = "BTC", ticker2: str = "USD", time_interval: str = "1DAY",
+                       start_year: int = 2020, start_month: int = 1, start_day: int = 1,
+                       end_year: int = 2021, end_month: int = 1, end_day: int = 1) -> pd.DataFrame:
+
+        start = datetime.date(start_year, start_month, start_day).isoformat()
+        end = datetime.date(end_year, end_month, end_day).isoformat()
+        ohlcv_historical = self.api.ohlcv_historical_data(f'BITSTAMP_SPOT_{ticker1}_{ticker2}',
+                                                     {'period_id': time_interval,
+                                                      'time_start': start,
+                                                      'time_end': end})
+
+        df = pd.DataFrame(columns=['open', 'close', 'high', 'low', 'volume', 'trades', 'period_start'])
+
+        for period in ohlcv_historical:
+            d = {
+                'open': period['price_open'],
+                'close': period['price_close'],
+                'high': period['price_high'],
+                'low': period['price_low'],
+                'volume': period['volume_traded'],
+                'trades': period['trades_count'],
+                'period_start': period['time_period_start']
+            }
+            df = df.append(d, ignore_index=True)
+            print('Period start: %s' % period['time_period_start'])
+            print('Period end: %s' % period['time_period_end'])
+            print('Time open: %s' % period['time_open'])
+            print('Time close: %s' % period['time_close'])
+            print('Price open: %s' % period['price_open'])
+            print('Price close: %s' % period['price_close'])
+            print('Price low: %s' % period['price_low'])
+            print('Price high: %s' % period['price_high'])
+            print('Volume traded: %s' % period['volume_traded'])
+            print('Trades count: %s' % period['trades_count'])
+        return df
 
     def print_exchanges(self):
         exchanges = self.api.metadata_list_exchanges()
@@ -113,11 +159,11 @@ class CoinAPI:
             print('Unit name: %s' % period['unit_name'])
             print('Display name: %s' % period['display_name'])
 
-    def bars_latest_data(self, pairs_str: str = "BITSTAMP_SPOT_BTC_USD", timespan: str = "1MIN"):
+    def bars_latest_data(self, sym1: str = "BTC", sym2: str = "USD", timespan: str = "1MIN"):
         if timespan not in period_ids:
             return f"The timespan you gave of {timespan} is not in the possible time units."
 
-        ohlcv_latest = self.api.ohlcv_latest_data(pairs_str, {'period_id': timespan})
+        ohlcv_latest = self.api.ohlcv_latest_data(f"BITSTAMP_SPOT_{sym1}_{sym2}", {'period_id': timespan})
 
         for period in ohlcv_latest:
             print('Period start: %s' % period['time_period_start'])
@@ -130,178 +176,7 @@ class CoinAPI:
             print('Price high: %s' % period['price_high'])
             print('Volume traded: %s' % period['volume_traded'])
             print('Trades count: %s' % period['trades_count'])
-"""
 
 
-start_of_2016 = datetime.date(2016, 1, 1).isoformat()
-ohlcv_historical = api.ohlcv_historical_data('BITSTAMP_SPOT_BTC_USD', {'period_id': '1MIN', 'time_start': start_of_2016})
-
-for period in ohlcv_historical:
-    print('Period start: %s' % period['time_period_start'])
-    print('Period end: %s' % period['time_period_end'])
-    print('Time open: %s' % period['time_open'])
-    print('Time close: %s' % period['time_close'])
-    print('Price open: %s' % period['price_open'])
-    print('Price close: %s' % period['price_close'])
-    print('Price low: %s' % period['price_low'])
-    print('Price high: %s' % period['price_high'])
-    print('Volume traded: %s' % period['volume_traded'])
-    print('Trades count: %s' % period['trades_count'])
-
-latest_trades = api.trades_latest_data_all()
-
-for data in latest_trades:
-    print('Symbol ID: %s' % data['symbol_id'])
-    print('Time Exchange: %s' % data['time_exchange'])
-    print('Time CoinAPI: %s' % data['time_coinapi'])
-    print('UUID: %s' % data['uuid'])
-    print('Price: %s' % data['price'])
-    print('Size: %s' % data['size'])
-    print('Taker Side: %s' % data['taker_side'])
-
-latest_trades_doge = api.trades_latest_data_symbol('BITTREX_SPOT_BTC_USD')
-
-for data in latest_trades_doge:
-    print('Symbol ID: %s' % data['symbol_id'])
-    print('Time Exchange: %s' % data['time_exchange'])
-    print('Time CoinAPI: %s' % data['time_coinapi'])
-    print('UUID: %s' % data['uuid'])
-    print('Price: %s' % data['price'])
-    print('Size: %s' % data['size'])
-    print('Taker Side: %s' % data['taker_side'])
-
-historical_trades_btc = api.trades_historical_data('BITSTAMP_SPOT_BTC_USD', {'time_start': start_of_2016})
-
-for data in historical_trades_btc:
-    print('Symbol ID: %s' % data['symbol_id'])
-    print('Time Exchange: %s' % data['time_exchange'])
-    print('Time CoinAPI: %s' % data['time_coinapi'])
-    print('UUID: %s' % data['uuid'])
-    print('Price: %s' % data['price'])
-    print('Size: %s' % data['size'])
-    print('Taker Side: %s' % data['taker_side'])
-
-current_quotes = api.quotes_current_data_all()
-print(current_quotes)
-for quote in current_quotes:
-    print('Symbol ID: %s' % quote['symbol_id'])
-    print('Time Exchange: %s' % quote['time_exchange'])
-    print('Time CoinAPI: %s' % quote['time_coinapi'])
-    print('Ask Price: %s' % quote['ask_price'])
-    print('Ask Size: %s' % quote['ask_size'])
-    print('Bid Price: %s' % quote['bid_price'])
-    print('Bid Size: %s' % quote['bid_size'])
-    if 'last_trade' in quote:
-        print('Last Trade: %s' % quote['last_trade'])
-
-current_quote_btc_usd = api.quotes_current_data_symbol('BITSTAMP_SPOT_BTC_USD')
-
-print('Symbol ID: %s' % current_quote_btc_usd['symbol_id'])
-print('Time Exchange: %s' % current_quote_btc_usd['time_exchange'])
-print('Time CoinAPI: %s' % current_quote_btc_usd['time_coinapi'])
-print('Ask Price: %s' % current_quote_btc_usd['ask_price'])
-print('Ask Size: %s' % current_quote_btc_usd['ask_size'])
-print('Bid Price: %s' % current_quote_btc_usd['bid_price'])
-print('Bid Size: %s' % current_quote_btc_usd['bid_size'])
-if 'last_trade' in current_quote_btc_usd:
-    last_trade = current_quote_btc_usd['last_trade']
-    print('Last Trade:')
-    print('- Taker Side: %s' % last_trade['taker_side'])
-    print('- UUID: %s' % last_trade['uuid'])
-    print('- Time Exchange: %s' % last_trade['time_exchange'])
-    print('- Price: %s' % last_trade['price'])
-    print('- Size: %s' % last_trade['size'])
-    print('- Time CoinAPI: %s' % last_trade['time_coinapi'])
-
-quotes_latest_data = api.quotes_latest_data_all()
-
-for quote in quotes_latest_data:
-    print('Symbol ID: %s' % quote['symbol_id'])
-    print('Time Exchange: %s' % quote['time_exchange'])
-    print('Time CoinAPI: %s' % quote['time_coinapi'])
-    print('Ask Price: %s' % quote['ask_price'])
-    print('Ask Size: %s' % quote['ask_size'])
-    print('Bid Price: %s' % quote['bid_price'])
-    print('Bid Size: %s' % quote['bid_size'])
-
-quotes_latest_data_btc_usd = api.quotes_latest_data_symbol('BITSTAMP_SPOT_BTC_USD')
-
-for quote in quotes_latest_data_btc_usd:
-    print('Symbol ID: %s' % quote['symbol_id'])
-    print('Time Exchange: %s' % quote['time_exchange'])
-    print('Time CoinAPI: %s' % quote['time_coinapi'])
-    print('Ask Price: %s' % quote['ask_price'])
-    print('Ask Size: %s' % quote['ask_size'])
-    print('Bid Price: %s' % quote['bid_price'])
-    print('Bid Size: %s' % quote['bid_size'])
-
-quotes_historical_data_btc_usd = api.quotes_historical_data('BITSTAMP_SPOT_BTC_USD', {'time_start': start_of_2016})
-
-for quote in quotes_historical_data_btc_usd:
-    print('Symbol ID: %s' % quote['symbol_id'])
-    print('Time Exchange: %s' % quote['time_exchange'])
-    print('Time CoinAPI: %s' % quote['time_coinapi'])
-    print('Ask Price: %s' % quote['ask_price'])
-    print('Ask Size: %s' % quote['ask_size'])
-    print('Bid Price: %s' % quote['bid_price'])
-    print('Bid Size: %s' % quote['bid_size'])
-
-# orderbooks_current_data = api.orderbooks_current_data_all()
-
-# for data in orderbooks_current_data:
-#     print('Symbol ID: %s' % data['symbol_id'])
-#     print('Time Exchange: %s' % data['time_exchange'])
-#     print('Time CoinAPI: %s' % data['time_coinapi'])
-#     print('Asks:')
-#     for ask in data['asks']:
-#         print('- Price: %s' % ask['price'])
-#         print('- Size: %s' % ask['size'])
-#     print('Bids:')
-#     for bid in data['bids']:
-#         print('- Price: %s' % bid['price'])
-#         print('- Size: %s' % bid['size'])
-
-orderbooks_current_data_btc_usd = api.orderbooks_current_data_symbol('BITSTAMP_SPOT_BTC_USD')
-
-print('Symbol ID: %s' % orderbooks_current_data_btc_usd['symbol_id'])
-print('Time Exchange: %s' % orderbooks_current_data_btc_usd['time_exchange'])
-print('Time CoinAPI: %s' % orderbooks_current_data_btc_usd['time_coinapi'])
-print('Asks:')
-for ask in orderbooks_current_data_btc_usd['asks']:
-    print('- Price: %s' % ask['price'])
-    print('- Size: %s' % ask['size'])
-print('Bids:')
-for bid in orderbooks_current_data_btc_usd['bids']:
-    print('- Price: %s' % bid['price'])
-    print('- Size: %s' % bid['size'])
-
-orderbooks_latest_data_btc_usd = api.orderbooks_latest_data('BITSTAMP_SPOT_BTC_USD')
-
-for data in orderbooks_latest_data_btc_usd:
-    print('Symbol ID: %s' % data['symbol_id'])
-    print('Time Exchange: %s' % data['time_exchange'])
-    print('Time CoinAPI: %s' % data['time_coinapi'])
-    print('Asks:')
-    for ask in data['asks']:
-        print('- Price: %s' % ask['price'])
-        print('- Size: %s' % ask['size'])
-    print('Bids:')
-    for bid in data['bids']:
-        print('- Price: %s' % bid['price'])
-        print('- Size: %s' % bid['size'])
-
-orderbooks_historical_data_btc_usd = api.orderbooks_historical_data('BITSTAMP_SPOT_BTC_USD', {'time_start': start_of_2016})
-
-for data in orderbooks_historical_data_btc_usd:
-    print('Symbol ID: %s' % data['symbol_id'])
-    print('Time Exchange: %s' % data['time_exchange'])
-    print('Time CoinAPI: %s' % data['time_coinapi'])
-    print('Asks:')
-    for ask in data['asks']:
-        print('- Price: %s' % ask['price'])
-        print('- Size: %s' % ask['size'])
-    print('Bids:')
-    for bid in data['bids']:
-        print('- Price: %s' % bid['price'])
-        print('- Size: %s' % bid['size'])
-"""
+api = CoinAPI()
+data = api.get_daily_data()
