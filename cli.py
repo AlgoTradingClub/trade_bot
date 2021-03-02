@@ -1,5 +1,7 @@
 '''
-Here we could make a cli interface file that works similar to 'manage.py' from django. Meaning, that since this is in the top level directory, it can run any function, unittest, and would make a centralized point of entry for any of the programs.
+Here we could make a cli interface file that works similar to 'manage.py' from django.
+Meaning, that since this is in the top level directory, it can run any function, unittest,
+and would make a centralized point of entry for any of the programs.
 
 Does anyone have objection for this?
 
@@ -8,44 +10,45 @@ maybe using 'click' or 'fire'. They seem a bit more friendly than 'argparse'
 '''
 import click
 import os
-from helpers.cli_helper import *
+from helpers.cli_helper import run_trade, current_stock_price, start_backtest
 
 #  See https://zetcode.com/python/click/ for a good guide to working with click
 
 
 @click.group()
 def cli():
-  pass
+    pass
 
 
 @cli.command(name="trade")
-@click.argument('paper', default='True')
+@click.argument('paper', default='Paper')
 def trade(paper: str):
     """
-    Runs the strategies and submits the order. Can be paper trading or live.
+    Runs the strategies and submits the order.
+    Can be paper trading or live.
+    cli.py trade [Paper]  > Paper Trading
+    cli.py trade Live   > Live Trading
     """
-    if paper.lower() == "true":
-        run_strategies(True)
-    elif paper.lower() == "false":
-        run_strategies(False)
+    if paper.lower() == "paper":
+        run_trade(True)
+    elif paper.lower() == "live":
+        run_trade(False)
 
 
-@cli.command(name='gen')
-def generic():
+@cli.command(name='backtest')
+@click.option('-s', '-start', 'start', default='2020-06-01', type=str, show_default=True)
+@click.option('-e', '-end', 'end', default='2021-03-02', type=str, show_default=True)
+def backtest(start, end):
     """
-    Prints a generic hello message
+    Runs a back test using historical data with the algorithms in `trading_manager.py`
     """
-    click.echo('Hello there')
+    start_backtest(start, end)
 
 
-@cli.command(name='wel')
-@click.argument('name', default='guest')
-@click.option('-n', default=1, type=int, show_default=True)
-def welcome(name, n):
-    """
-    Sends a warm welcome!
-    """
-    click.echo(hello_world(name) * n)
+# @cli.command(name='wel')
+# @click.argument('name', default='guest')
+# @click.option('-n', default=1, type=int, show_default=True)
+# def welcome(name, n):
 
 
 @cli.command(name="check_environ")
@@ -59,14 +62,17 @@ def check_environment():
     else:
         click.echo(f"Failed: '{live_key}' is not found in $PATH\n Add 'polygon_api_key' to $PATH.")
 
-@cli.command(name='poly')
-@click.option('-v', nargs=1, default='', type=str, help="Shows the last aggregate data point from the given stock ticker")
-@click.option('--u', is_flag=True, help="updates the CSV files with current data based on saved tickers in ... .txt")
-def polygon_cli(v, u):
-    if v:
-        click.echo(v)
-    if u:
-        click.echo(u)
+
+@cli.command(name="stock")
+@click.argument("symbol", default='A', type=str)
+def get_stock_price(symbol):
+    """
+    Get the last price of `symbol`
+    """
+    print("Retrieving Data")
+    p = current_stock_price(symbol.upper())
+    click.echo(p)
+
 
 '''
 TODO commands to make:

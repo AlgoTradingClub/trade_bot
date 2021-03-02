@@ -24,11 +24,13 @@ class AlpacaData:
         self.api = tradeapi.REST(key_id, secret_key, base_url=base_url)
         self.api = tradeapi.REST()
         account = self.api.get_account()
-        print(account.status)
 
     def get_bars_data(self, tickers: list, timeframe: str = 'day',
                       from_year: int = 2020, from_month: int = 1, from_day: int = 1,
                       to_year: int = 2021, to_month: int = 2, to_day: int = 26, limit=1000, ) -> pd.DataFrame:
+
+        if isinstance(tickers, str):
+            tickers = [tickers]
 
         start = date.date(from_year, from_month, from_day).isoformat()
         end = date.date(to_year, to_month, to_day).isoformat()
