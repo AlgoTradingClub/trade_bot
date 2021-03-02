@@ -18,6 +18,18 @@ def cli():
   pass
 
 
+@cli.command(name="trade")
+@click.argument('paper', default='True')
+def trade(paper: str):
+    """
+    Runs the strategies and submits the order. Can be paper trading or live.
+    """
+    if paper.lower() == "true":
+        run_strategies(True)
+    elif paper.lower() == "false":
+        run_strategies(False)
+
+
 @cli.command(name='gen')
 def generic():
     """
