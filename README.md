@@ -7,10 +7,9 @@ Apes Together!
 # Technologies
 - Python 3.8
 - Click 7.1
-- Requests 2.5.1
+- Requests 2.25.1
 - Pandas 1.2.1
 - polygon-api-client 0.1.9
-- 
 
 # Setup
 Add only by Pull Request. This paragraph should explain what that means.
@@ -91,11 +90,13 @@ here you go, so easy, so algo
 
 # Project status 
 ## Still, very much in progress
-- [ ] create a test folder
-- [ ] implement simple cli file
+- [x] create a test folder
+- [x] implement simple cli file
+- [ ] make a better cli
 - [x] structure the folders in the 'best' way?  
-- [ ] import code from intelligent systems for data gathering from polygon
+- [x] import code from intelligent systems for data gathering from polygon
 - [ ] import code for finding pairs
+- [ ] write engine to run algorithms
 
 # Sources
 This app is inspired by Andy Brim. You're the real MVP. 
