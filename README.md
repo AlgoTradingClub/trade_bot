@@ -63,6 +63,7 @@ Add only by Pull Request. This paragraph should explain what that means.
 
 # Table of contents
 1. cli.py: This is the start of the system that initializes the rest of the functionality of the project
+   - To run all tests: `python cli.py test`
 2. helpers:
    	- Scaffolding Code. This is where we put 'dirty code', code that does not contain core business rules but that's nonetheless needed for the project.
 	- It's important to have a separate for this kind of code because if you place it together with actual business logic code, it will be increasingly hard to understand the business logic because there's so much other stuff mixed in.

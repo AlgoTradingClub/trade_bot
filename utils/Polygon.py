@@ -1,5 +1,6 @@
 # AS of 2/28/2021, polygon access is no longer available from alpaca keys.
 from polygon import RESTClient
+from models.settings import Settings
 import os
 from datetime import datetime, timedelta
 from requests import exceptions
@@ -17,6 +18,7 @@ def verify_date_string(date: str) -> bool:
     else:
         return False
 
+
 class Poly:
     """
     This is an example for what the polygon api can do
@@ -25,7 +27,7 @@ class Poly:
     """
     # Edit this to the key name of the live alpaca key
     # to access polygon data, you must have at least 1 $ in a live alpaca account.
-    poly_api_key_name = "polygon_api_key"
+    poly_api_key_name = Settings.keys_names["Polygon Key"]
 
     def __init__(self):
         # this will get the computer's environment variable and load it in.

@@ -18,6 +18,8 @@ class Algorithm:
         raise NotImplementedError
 
     def trade(self, today: date) -> List[Order]:
+        # TODO should i add a context variable to the parameters so the algo
+        #  can know what current assets, cash, and positions I currently have?
         print("I was not overridden in the child class. Exiting to prevent errors.")
         raise NotImplementedError
 

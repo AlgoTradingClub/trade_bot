@@ -3,6 +3,7 @@ from models.Order import Order
 from typing import List
 from datetime import date
 
+
 class Pairs(Algorithm):
     def __init__(self):
         super(Pairs, self).__init__()

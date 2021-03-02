@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from utils.restapi_coinapi_io import CoinAPIv1
 import datetime
+from models.settings import Settings
 
 
 period_ids = {
@@ -30,7 +31,9 @@ class CoinAPI:
     """
     def __init__(self):
         try:
-            self.api_key = os.environ['coinapi_io_key']
+            coinapi_key = Settings.keys_names["Coinbase Key"]
+            self.api_key = os.environ[coinapi_key]
+            del coinapi_key
         except KeyError as k:
             print(k.__str__())
             print("API Key for the CoinAPI.io not found.\n"
