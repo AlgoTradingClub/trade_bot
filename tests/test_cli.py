@@ -1,4 +1,4 @@
-from cli import get_stock_price
+from trade_bot.cli import get_stock_price
 import unittest
 
 

@@ -1,8 +1,8 @@
 import os
 import pandas as pd
-from utils.restapi_coinapi_io import CoinAPIv1
+from trade_bot.utils.restapi_coinapi_io import CoinAPIv1
 import datetime
-from models.settings import Settings
+from trade_bot.models.settings import Settings
 
 
 period_ids = {

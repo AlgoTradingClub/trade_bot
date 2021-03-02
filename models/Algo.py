@@ -1,6 +1,6 @@
-from models.Order import Order
-from utils.Alpaca_Data import AlpacaData
-from utils.CoinAPI_io import CoinAPI
+from trade_bot.models.Order import Order
+from trade_bot.utils.Alpaca_Data import AlpacaData
+from trade_bot.utils.CoinAPI_io import CoinAPI
 from typing import List
 from datetime import date
 import sys

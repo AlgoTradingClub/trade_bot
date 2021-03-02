@@ -1,7 +1,7 @@
-from helpers.trading_manager import run_strategies, run_backtest
-from utils.Alpaca_Data import AlpacaData
+from trade_bot.helpers.trading_manager import run_strategies, run_backtest
+from trade_bot.utils.Alpaca_Data import AlpacaData
 from datetime import datetime, date
-from models.settings import Settings
+from trade_bot.models.settings import Settings
 from typing import List
 import numpy as np
 import subprocess
@@ -110,11 +110,11 @@ def environ_checker() -> str:
 
 
 def tests():
-    testdir = join('..', 'trade-bot', 'tests')
+    testdir = join('..', 'trade_bot', 'tests')
     CURR_DIR = path.dirname(path.realpath(__file__))
     onlyfiles = [f for f in listdir(testdir) if isfile(join(testdir, f))]
     for f in onlyfiles:
         if f != "__init__.py":
             print(f)
-            p = join(testdir, f)
+            p = path.abspath(join(testdir, f))
             subprocess.run(["python", f"{p}"])

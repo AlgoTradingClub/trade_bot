@@ -1,5 +1,5 @@
-from models.Order import Order
-from models.settings import Settings
+from trade_bot.models.Order import Order
+from trade_bot.models.settings import Settings
 from typing import List
 import os
 

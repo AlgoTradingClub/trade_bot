@@ -1,5 +1,5 @@
-from models.Algo import Algorithm
-from models.Order import Order
+from trade_bot.models.Algo import Algorithm
+from trade_bot.models.Order import Order
 from typing import List
 from datetime import date
 

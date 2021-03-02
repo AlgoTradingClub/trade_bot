@@ -2,7 +2,7 @@ import alpaca_trade_api as tradeapi
 import os
 import pandas as pd
 import datetime as date
-from models.settings import Settings
+from trade_bot.models.settings import Settings
 
 
 class AlpacaData:

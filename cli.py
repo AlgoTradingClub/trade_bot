@@ -10,7 +10,7 @@ maybe using 'click' or 'fire'. They seem a bit more friendly than 'argparse'
 '''
 import click
 import os
-from helpers.cli_helper import run_trade, current_stock_price, start_backtest, environ_checker, tests
+from trade_bot.helpers.cli_helper import run_trade, current_stock_price, start_backtest, environ_checker, tests
 
 #  See https://zetcode.com/python/click/ for a good guide to working with click
 

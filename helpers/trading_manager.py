@@ -1,9 +1,9 @@
 import datetime
-from models.mac1 import mac
-from models.pairs1 import Pairs
-from models.Order import Order
+from trade_bot.models.mac1 import mac
+from trade_bot.models.pairs1 import Pairs
+from trade_bot.models.Order import Order
 from datetime import date, datetime, timedelta
-from helpers.order_reconciler import place_order
+from trade_bot.helpers.order_reconciler import place_order
 
 strategies = [
         mac,
