@@ -1,3 +1,4 @@
+# AS of 2/28/2021, polygon access is no longer available from alpaca keys.
 from polygon import RESTClient
 import os
 from datetime import datetime, timedelta
@@ -19,11 +20,12 @@ def verify_date_string(date: str) -> bool:
 class Poly:
     """
     This is an example for what the polygon api can do
+    2 year historical data. 5 calls/minute, only end of day data, so no real time data
     See https://polygon.io/docs/ for all the available endpoints
     """
     # Edit this to the key name of the live alpaca key
     # to access polygon data, you must have at least 1 $ in a live alpaca account.
-    poly_api_key_name = "APCA_API_KEY_ID_LIVE"
+    poly_api_key_name = "polygon_api_key"
 
     def __init__(self):
         # this will get the computer's environment variable and load it in.

@@ -18,6 +18,18 @@ def cli():
   pass
 
 
+@cli.command(name="trade")
+@click.argument('paper', default='True')
+def trade(paper: str):
+    """
+    Runs the strategies and submits the order. Can be paper trading or live.
+    """
+    if paper.lower() == "true":
+        run_strategies(True)
+    elif paper.lower() == "false":
+        run_strategies(False)
+
+
 @cli.command(name='gen')
 def generic():
     """
@@ -41,11 +53,11 @@ def check_environment():
     """
     Check to see if the necessary environment variables are present
     """
-    live_key = 'APCA_API_KEY_ID_LIVE'
+    live_key = 'polygon_api_key'
     if live_key in os.environ:
         click.echo("Passed: Alpaca Live Key is in the environment variables")
     else:
-        click.echo(f"Failed: '{live_key}' is not found in $PATH")
+        click.echo(f"Failed: '{live_key}' is not found in $PATH\n Add 'polygon_api_key' to $PATH.")
 
 @cli.command(name='poly')
 @click.option('-v', nargs=1, default='', type=str, help="Shows the last aggregate data point from the given stock ticker")

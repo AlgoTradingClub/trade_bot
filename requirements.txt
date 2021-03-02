@@ -3,3 +3,5 @@ requests==2.25.1
 pandas==1.2.1
 numpy==1.20.1
 click==7.1.2
+pytest==6.2.2
+alpaca-trade-api=0.53.0
