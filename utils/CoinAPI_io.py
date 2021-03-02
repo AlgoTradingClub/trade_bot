@@ -3,6 +3,7 @@ import pandas as pd
 from trade_bot.utils.restapi_coinapi_io import CoinAPIv1
 import datetime
 from trade_bot.models.settings import Settings
+import urllib.error
 
 
 period_ids = {
@@ -45,14 +46,18 @@ class CoinAPI:
 
     def get_daily_data(self, ticker1: str = "BTC", ticker2: str = "USD", time_interval: str = "1DAY",
                        start_year: int = 2020, start_month: int = 1, start_day: int = 1,
-                       end_year: int = 2021, end_month: int = 1, end_day: int = 1) -> pd.DataFrame:
+                       end_year: int = 2021, end_month: int = 1, end_day: int = 1, stdout=True) -> pd.DataFrame:
 
         start = datetime.date(start_year, start_month, start_day).isoformat()
         end = datetime.date(end_year, end_month, end_day).isoformat()
-        ohlcv_historical = self.api.ohlcv_historical_data(f'BITSTAMP_SPOT_{ticker1}_{ticker2}',
+        try:
+            ohlcv_historical = self.api.ohlcv_historical_data(f'BITSTAMP_SPOT_{ticker1}_{ticker2}',
                                                      {'period_id': time_interval,
                                                       'time_start': start,
                                                       'time_end': end})
+        except Exception:
+            print(f"400 Error: Bad Request. Check existance of '{ticker1}' and '{ticker2}'")
+            return None
 
         df = pd.DataFrame(columns=['open', 'close', 'high', 'low', 'volume', 'trades', 'period_start'])
 
@@ -67,16 +72,17 @@ class CoinAPI:
                 'period_start': period['time_period_start']
             }
             df = df.append(d, ignore_index=True)
-            print('Period start: %s' % period['time_period_start'])
-            print('Period end: %s' % period['time_period_end'])
-            print('Time open: %s' % period['time_open'])
-            print('Time close: %s' % period['time_close'])
-            print('Price open: %s' % period['price_open'])
-            print('Price close: %s' % period['price_close'])
-            print('Price low: %s' % period['price_low'])
-            print('Price high: %s' % period['price_high'])
-            print('Volume traded: %s' % period['volume_traded'])
-            print('Trades count: %s' % period['trades_count'])
+            if stdout:
+                print('Period start: %s' % period['time_period_start'])
+                print('Period end: %s' % period['time_period_end'])
+                print('Time open: %s' % period['time_open'])
+                print('Time close: %s' % period['time_close'])
+                print('Price open: %s' % period['price_open'])
+                print('Price close: %s' % period['price_close'])
+                print('Price low: %s' % period['price_low'])
+                print('Price high: %s' % period['price_high'])
+                print('Volume traded: %s' % period['volume_traded'])
+                print('Trades count: %s' % period['trades_count'])
         return df
 
     def print_exchanges(self):

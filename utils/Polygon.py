@@ -1,6 +1,6 @@
 # AS of 2/28/2021, polygon access is no longer available from alpaca keys.
 from polygon import RESTClient
-from models.settings import Settings
+from trade_bot.models.settings import Settings
 import os
 from datetime import datetime, timedelta
 from requests import exceptions

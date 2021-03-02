@@ -1,6 +1,7 @@
 from trade_bot.models.Order import Order
 from trade_bot.utils.Alpaca_Data import AlpacaData
 from trade_bot.utils.CoinAPI_io import CoinAPI
+from trade_bot.utils.Polygon import Poly
 from typing import List
 from datetime import date
 import sys
@@ -10,6 +11,7 @@ class Algorithm:
     def __init__(self):
         self.AlpacaData = AlpacaData()
         self.CoinAPI = CoinAPI()
+        self.PolyApi = Poly()
         self.data = ""
         self.orders = []
 
