@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from restapi_coinapi_io import CoinAPIv1
+from utils.restapi_coinapi_io import CoinAPIv1
 import datetime
 
 
@@ -176,7 +176,3 @@ class CoinAPI:
             print('Price high: %s' % period['price_high'])
             print('Volume traded: %s' % period['volume_traded'])
             print('Trades count: %s' % period['trades_count'])
-
-
-api = CoinAPI()
-data = api.get_daily_data()

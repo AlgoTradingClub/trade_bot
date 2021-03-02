@@ -1,7 +1,7 @@
 import datetime
-from ..models.mac1 import mac
-from ..models.pairs1 import Pairs
-from ..models.Order import Order
+from models.mac1 import mac
+from models.pairs1 import Pairs
+from models.Order import Order
 
 
 def run_strategies(paper=True):
@@ -14,6 +14,7 @@ def run_strategies(paper=True):
 
         strat.before_trading()
         order = strat.trade()
+        print("Doing something with the order. Checking with the portfolio checker to see if this is legit")
         print("Submitting Order")
         strat.after_trading()
 

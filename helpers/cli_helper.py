@@ -1,4 +1,4 @@
-from .trading_manager import run_strategies
+from helpers.trading_manager import run_strategies
 
 
 def hello_world(name):

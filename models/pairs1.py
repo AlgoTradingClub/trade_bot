@@ -1,5 +1,5 @@
-from Algo import Algorithm
-from Order import Order
+from models.Algo import Algorithm
+from models.Order import Order
 
 
 print("Running Pairs Trading Strategy 1 ...")

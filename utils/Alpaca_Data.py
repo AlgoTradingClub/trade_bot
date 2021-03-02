@@ -57,8 +57,3 @@ class AlpacaData:
 
 
 
-
-a = AlpacaData()
-b = a.get_bars_data(["AAPL"], "1Min", to_day=26, limit=750)
-print(b)
-

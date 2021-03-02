@@ -1,6 +1,6 @@
-from Order import Order
-from ..utils.Alpaca_Data import AlpacaData
-from ..utils.CoinAPI_io import CoinAPI
+from models.Order import Order
+from utils.Alpaca_Data import AlpacaData
+from utils.CoinAPI_io import CoinAPI
 import sys
 
 
@@ -11,13 +11,13 @@ class Algorithm:
 
     def before_trading(self) -> None:
         print("I was not overridden in the child class. Exiting to prevent errors.")
-        sys.exit(1)
+        raise NotImplementedError
 
     def trade(self) -> Order:
         print("I was not overridden in the child class. Exiting to prevent errors.")
-        sys.exit(1)
+        raise NotImplementedError
 
     def after_trading(self) -> None:
         print("I was not overridden in the child class. Exiting to prevent errors.")
-        sys.exit(1)
+        raise NotImplementedError
 
