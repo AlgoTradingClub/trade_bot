@@ -4,7 +4,7 @@ from typing import List
 import os
 
 
-def place_order(order: List[Order], paper=True):
+def place_order(order: List[Order], paper=True, backtest=False):
     """
     Only for the trade function and not the backtester
     """

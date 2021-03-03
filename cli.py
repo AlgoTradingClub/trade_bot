@@ -38,11 +38,12 @@ def trade(paper: str):
 @cli.command(name='backtest')
 @click.option('-s', '-start', 'start', default='2020-06-01', type=str, show_default=True)
 @click.option('-e', '-end', 'end', default='2021-03-02', type=str, show_default=True)
-def backtest(start, end):
+@click.option('-c', '-cach', 'cash', default=1000.00, type=float, show_default=True)
+def backtest(start, end, cash):
     """
     Runs a back test using historical data with the algorithms in `trading_manager.py`
     """
-    start_backtest(start, end)
+    click.echo(start_backtest(start, end, cash))
 
 
 # @cli.command(name='wel')

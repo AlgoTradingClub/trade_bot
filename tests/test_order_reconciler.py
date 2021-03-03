@@ -2,7 +2,7 @@ import unittest
 from trade_bot.helpers.order_reconciler import place_order
 
 
-class TestCoinAPI(unittest.TestCase):
+class TestOrderReconciler(unittest.TestCase):
     pass
 
 

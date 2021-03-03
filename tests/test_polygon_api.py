@@ -2,7 +2,7 @@ import unittest
 from trade_bot.utils.Polygon import Poly
 
 
-class TestCoinAPI(unittest.TestCase):
+class TestPolygon(unittest.TestCase):
     pass
 
 

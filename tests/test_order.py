@@ -2,7 +2,7 @@ import unittest
 from trade_bot.models.Order import Order
 
 
-class TestCoinAPI(unittest.TestCase):
+class TestOrder(unittest.TestCase):
     pass
 
 

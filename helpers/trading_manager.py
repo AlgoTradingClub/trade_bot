@@ -1,13 +1,14 @@
 import datetime
-from trade_bot.models.mac1 import mac
-from trade_bot.models.pairs1 import Pairs
+from trade_bot.models.mac1 import MAC as mac1
+from trade_bot.models.pairs1 import Pairs as pairs1
 from trade_bot.models.Order import Order
 from datetime import date, datetime, timedelta
 from trade_bot.helpers.order_reconciler import place_order
+from trade_bot.models.PortfolioSim import Portfolio
 
 strategies = [
-        mac,
-        Pairs
+        mac1,
+        pairs1
     ]
 
 
@@ -35,7 +36,8 @@ def run_strategies(paper=True):
 
 # TODO implement an option to only run one or some of the strategies
 def run_backtest(start: str = "2020-01-01"
-                 , end: str = date.today().strftime("%Y-%m-%d")):
+                 , end: str = date.today().strftime("%Y-%m-%d")
+                 , cash: float = 10000.00):
     # TODO is there a way to consolidate this and the list above?
 
     start = datetime.strptime(start, "%Y-%m-%d")
@@ -50,14 +52,20 @@ def run_backtest(start: str = "2020-01-01"
     diff = end - start
 
     results = []
-    for obj in strategies:
-        strat = obj()
-        strat.before_trading()
-        for i in range(diff.days + 1):
-            day = start + timedelta(i)
+    portfolio = Portfolio(cash)
+    my_objs = [obj() for obj in strategies]
+    for i in range(diff.days + 1):
+        day = start + timedelta(i)
+        orders = []
+        for strat in my_objs:
+            strat.before_trading()
             print(f"running strat {strat.__class__.__name__} for day {day.strftime('%Y-%m-%d')}")
-            orders = strat.trade(day)
-            # TODO do something with the order
-        strat.after_trading()
+            orders += strat.trade(day)
+            strat.after_trading()
+
+        my_orders = place_order(orders, backtest=True)
+        portfolio.place_backtest_order(my_orders)
+
+    return portfolio.results()
 
 

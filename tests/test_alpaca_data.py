@@ -2,7 +2,7 @@ import unittest
 from trade_bot.utils.Alpaca_Data import AlpacaData
 
 
-class TestCoinAPI(unittest.TestCase):
+class TestAlpacaData(unittest.TestCase):
     pass
 
 

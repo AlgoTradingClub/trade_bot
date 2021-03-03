@@ -2,7 +2,7 @@ import unittest
 from trade_bot.models.Algo import Algorithm
 
 
-class TestCoinAPI(unittest.TestCase):
+class TestAlgo(unittest.TestCase):
     pass
 
 
