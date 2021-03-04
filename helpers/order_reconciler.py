@@ -22,10 +22,9 @@ class OrderReconciler:
         to_remove = set()
         for i in range(len(orders) - 1):
             for j in range(i + 1, len(orders)):
-                if j in to_remove:
+                if j in to_remove or i in to_remove:
                     continue
-                elif (orders[i].asset == orders[j].asset) and (orders[i].order_type == orders[j].order_type) \
-                        and orders[i].notional == '0.0' and orders[j].notional == '0.0':
+                elif orders[i].condensable(orders[j]):
                     # condense
                     i_sign = -1 if orders[i].side == 'sell' else 1
                     j_sign = -1 if orders[j].side == 'sell' else 1
@@ -44,8 +43,6 @@ class OrderReconciler:
                 k += 1
 
         # TODO check account
-
-        # TODO convert Order to alpaca format
 
         return orders
 

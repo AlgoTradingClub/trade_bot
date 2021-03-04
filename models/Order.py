@@ -92,6 +92,13 @@ class Order:
                 type=self.order_type,
                 time_in_force=self.time_in_force,
             )
+            
+    def condensable(self, other) -> bool:
+        condense = True
+        condense = condense and self.asset == other.asset
+        condense = condense and self.order_type == other.order_type
+        condense = condense and self.notional == '0.0' and other.notional == '0.0'
+        return condense
 
     def __str__(self):
         s = f"Order -> {self.side} {self.asset} QTY:{self.qty} $AMOUNT: {self.notional} TYPE:{self.order_type}"
