@@ -8,6 +8,7 @@ class Order:
     def __init__(self, side: str, asset: str, qty: float = 0.0, o_type: str = "market", notional: float = 0.0,
                  time_in_force: str = 'day', limit_price: float = 0.0, stop_price: float = 0.0,
                  trail_price: float = 0.0, trail_percent: float = 0.0, extended_hours: bool = False):
+
         self.qty = qty
         self.asset = asset.upper()
         self.notional = notional  # the dollar amount you want to trade
@@ -103,5 +104,12 @@ class Order:
         same = same and self.notional == other.notional
         same = same and self.order_type == other.order_type
         same = same and self.side == other.side
+        same = same and self.time_in_force == other.time_in_force
+
+        if float(self.limit_price) > 0 or float(self.stop_price) > 0 or float(self.trail_price) > 0:
+            raise NotImplementedError
+        if float(other.limit_price) > 0 or float(other.stop_price) > 0 or float(other.trail_price) > 0:
+            raise NotImplementedError
+            # TODO don't know how to deal with these comparisons yet, so just break
 
         return same

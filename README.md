@@ -5,11 +5,15 @@ Apes Together!
 - To show that we can make money, and our simple strategies are rock solid!
 
 # Technologies
-- Python 3.8
-- Click 7.1
-- Requests 2.25.1
-- Pandas 1.2.1
-- polygon-api-client 0.1.9
+Python >= 3.8
+polygon-api-client==0.1.9
+requests==2.25.1
+pandas==1.2.1
+numpy==1.20.1
+click==7.1.2
+pytest==6.2.2
+alpaca-trade-api==1.0.1
+
 
 # Setup
 Add only by Pull Request. This paragraph should explain what that means.
@@ -51,6 +55,7 @@ Add only by Pull Request. This paragraph should explain what that means.
 	- OS:
 		- Follow [these steps to install alpaca keys on Mac OS X](https://osxdaily.com/2015/07/28/set-enviornment-variables-mac-os-x/)
 
+## Code Contribution Standards
 - When writing code, create a new branch:
 `$ git checkout -b myNewFeature`
 - After writing code, add and commit the code to git
@@ -58,7 +63,7 @@ Add only by Pull Request. This paragraph should explain what that means.
 `$ git commit -m "this is what i did"`
 - Then push your code to github
 `$ git push -u origin myNewFeature`
-- this will create a pull request that we will look over and add comments to. Go to https://github.com/AlgoTradingClub/trade-bot to see the pull request and add any additional comments. When someone has reviewed your pull request, then we can add it to the main branch of code.
+- This will create a pull request that we will look over and add comments to. Go to https://github.com/AlgoTradingClub/trade-bot to see the pull request and add any additional comments. When someone has reviewed your pull request, then we can add it to the main branch of code.
 
 
 # Table of contents
@@ -93,11 +98,12 @@ here you go, so easy, so algo
 ## Still, very much in progress
 - [x] create a test folder
 - [x] implement simple cli file
-- [ ] make a better cli
+- [ ] make a better cli (colors and icons?)
 - [x] structure the folders in the 'best' way?  
 - [x] import code from intelligent systems for data gathering from polygon
 - [ ] import code for finding pairs
 - [ ] write engine to run algorithms
+- [x] get the MAC algo to paper trade
 
 # Sources
 This app is inspired by Andy Brim. You're the real MVP. 
