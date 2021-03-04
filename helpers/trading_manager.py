@@ -4,6 +4,11 @@ from trade_bot.models.pairs1 import Pairs as pairs1
 from datetime import date, datetime, timedelta
 from trade_bot.helpers.order_reconciler import OrderReconciler
 from trade_bot.models.PortfolioSim import Portfolio
+import logging
+import pathlib
+
+base_dir = pathlib.Path(__file__).resolve().parent.parent / 'logs' / 'trades.log'
+logging.basicConfig(filename=base_dir)
 
 strategies = [
         mac1,
@@ -32,6 +37,9 @@ def run_strategies(paper=True):
     print("Submitting Orders")
     o_r = OrderReconciler(paper)
     o_r.place_order(all_orders)
+    logging.info(f"Date: {date.today().isoformat()}\n")
+    for o in orders:
+        logging.info(f"\t - {str(o)}")
     print("Finished Running Strategies")
 
 

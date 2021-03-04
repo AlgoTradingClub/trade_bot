@@ -24,7 +24,7 @@ class OrderReconciler:
 
         # TODO convert Order to alpaca format
 
-        return []
+        return orders
 
     def backtest_orders(self, orders: List[Order]) -> List[Order]:
         return self.__check_orders(orders)

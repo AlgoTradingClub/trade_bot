@@ -46,11 +46,11 @@ class Order:
         if paper:
             key_id = key_names["Alpaca Paper Key ID"]
             secret_key = key_names["Alpaca Paper Secret Key"]
-            base_url = "https://paper-api.alpaca.markets/v2"
+            base_url = "https://paper-api.alpaca.markets"
         else:
             key_id = key_names["Alpaca Live Key ID"]
             secret_key = key_names["Alpaca Live Secret Key"]
-            base_url = "https://api.alpaca.markets/v2"
+            base_url = "https://api.alpaca.markets"
 
         key_id = environ[key_id]
         secret_key = environ[secret_key]
@@ -102,3 +102,7 @@ class Order:
                 type=self.order_type,
                 time_in_force=self.time_in_force,
             )
+
+    def __str__(self):
+        s = f"Order -> {self.side} {self.asset} QTY:{self.qty} $AMOUNT: {self.notional} TYPE:{self.order_type}"
+        return s
