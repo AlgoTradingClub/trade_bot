@@ -10,6 +10,7 @@ import pathlib
 base_dir = pathlib.Path(__file__).resolve().parent.parent / 'logs' / 'trades.log'
 logging.basicConfig(filename=base_dir)
 
+
 strategies = [
         mac1,
         pairs1

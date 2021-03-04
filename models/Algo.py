@@ -1,11 +1,12 @@
-from trade_bot.models.Order import Order
-from trade_bot.utils.Alpaca_Data import AlpacaData
-from trade_bot.utils.CoinAPI_io import CoinAPI
-from trade_bot.utils.Polygon import Poly
+from models.Order import Order
+from utils.Alpaca_Data import AlpacaData
+from utils.CoinAPI_io import CoinAPI
+from utils.Polygon import Poly
 from typing import List
 from datetime import date
 import sys
 
+NOT_IMPL_MSG = "I was not overridden in the child class. Exiting to prevent errors."
 
 class Algorithm:
     def __init__(self):
@@ -16,16 +17,13 @@ class Algorithm:
         self.orders = []
 
     def before_trading(self) -> None:
-        print("I was not overridden in the child class. Exiting to prevent errors.")
-        raise NotImplementedError
+        raise NotImplementedError(NOT_IMPL_MSG)
 
     def trade(self, today: date) -> List[Order]:
         # TODO should i add a context variable to the parameters so the algo
         #  can know what current assets, cash, and positions I currently have?
-        print("I was not overridden in the child class. Exiting to prevent errors.")
-        raise NotImplementedError
+        raise NotImplementedError(NOT_IMPL_MSG)
 
     def after_trading(self) -> None:
-        print("I was not overridden in the child class. Exiting to prevent errors.")
-        raise NotImplementedError
+        raise NotImplementedError(NOT_IMPL_MSG)
 

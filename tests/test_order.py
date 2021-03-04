@@ -1,5 +1,5 @@
 import unittest
-from trade_bot.models.Order import Order
+from models.Order import Order
 
 
 class TestOrder(unittest.TestCase):
