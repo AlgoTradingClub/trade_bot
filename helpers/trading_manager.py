@@ -1,10 +1,15 @@
 import datetime
-from models.mac1 import MAC as mac1
-from models.pairs1 import Pairs as pairs1
-from models.Order import Order
+from trade_bot.models.mac1 import MAC as mac1
+from trade_bot.models.pairs1 import Pairs as pairs1
 from datetime import date, datetime, timedelta
-from helpers.order_reconciler import place_order
-from models.PortfolioSim import Portfolio
+from trade_bot.helpers.order_reconciler import OrderReconciler
+from trade_bot.models.PortfolioSim import Portfolio
+import logging
+import pathlib
+
+base_dir = pathlib.Path(__file__).resolve().parent.parent / 'logs' / 'trades.log'
+logging.basicConfig(filename=base_dir)
+
 
 strategies = [
         mac1,
@@ -26,11 +31,16 @@ def run_strategies(paper=True):
         strat = obj()
         strat.before_trading()
         orders = strat.trade(date.today())
-        all_orders.append(orders)
+        assert isinstance(orders, list)
+        all_orders += orders
         strat.after_trading()
 
     print("Submitting Orders")
-    place_order(all_orders, paper)
+    o_r = OrderReconciler(paper)
+    o_r.place_order(all_orders)
+    logging.info(f"Date: {date.today().isoformat()}\n")
+    for o in orders:
+        logging.info(f"\t - {str(o)}")
     print("Finished Running Strategies")
 
 
@@ -38,7 +48,6 @@ def run_strategies(paper=True):
 def run_backtest(start: str = "2020-01-01"
                  , end: str = date.today().strftime("%Y-%m-%d")
                  , cash: float = 10000.00):
-    # TODO is there a way to consolidate this and the list above?
 
     start = datetime.strptime(start, "%Y-%m-%d")
     end = datetime.strptime(end, "%Y-%m-%d")
@@ -53,7 +62,9 @@ def run_backtest(start: str = "2020-01-01"
 
     results = []
     portfolio = Portfolio(cash)
+    o_r = OrderReconciler()
     my_objs = [obj() for obj in strategies]
+
     for i in range(diff.days + 1):
         day = start + timedelta(i)
         orders = []
@@ -63,7 +74,7 @@ def run_backtest(start: str = "2020-01-01"
             orders += strat.trade(day)
             strat.after_trading()
 
-        my_orders = place_order(orders, backtest=True)
+        my_orders = o_r.backtest_orders(orders)
         portfolio.place_backtest_order(my_orders)
 
     return portfolio.results()

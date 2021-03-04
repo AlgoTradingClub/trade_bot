@@ -1,4 +1,5 @@
 import alpaca_trade_api as tradeapi
+from typing import Dict
 import os
 import pandas as pd
 import datetime as date
@@ -12,7 +13,7 @@ class AlpacaData:
         200 api calls/ min
         """
         key_names = Settings.keys_names
-        base_url = "https://data.alpaca.markets/v2"
+        base_url = "https://data.alpaca.markets"
         if paper:
             key_id = key_names["Alpaca Paper Key ID"]
             secret_key = key_names["Alpaca Paper Secret Key"]
@@ -24,22 +25,23 @@ class AlpacaData:
         secret_key = os.environ[secret_key]
 
         self.api = tradeapi.REST(key_id, secret_key, base_url=base_url)
-        self.api = tradeapi.REST()
         del key_id, secret_key
 
     def get_bars_data(self, tickers: list, timeframe: str = 'day',
                       from_year: int = 2020, from_month: int = 1, from_day: int = 1,
-                      to_year: int = 2021, to_month: int = 2, to_day: int = 26, limit=1000, ) -> pd.DataFrame:
+                      to_year: int = 2021, to_month: int = 2, to_day: int = 26, limit=1000, ) -> Dict[str, pd.DataFrame]:
 
         if isinstance(tickers, str):
             tickers = [tickers]
 
+        assert isinstance(tickers, list)
+
         start = date.date(from_year, from_month, from_day).isoformat()
         end = date.date(to_year, to_month, to_day).isoformat()
-        response = self.api.get_barset(tickers, timeframe, limit, start, end)
 
         data = {}
         for ticker in tickers:
+            response = self.api.get_barset(ticker, timeframe, limit, start, end)
             df = pd.DataFrame(columns=['close', 'open', 'high', 'low', 'volume', 'time'])
             for bar in response[ticker]:
                 t = date.datetime.fromtimestamp(bar._raw['t'])
@@ -52,15 +54,11 @@ class AlpacaData:
                                ignore_index=True)
             data[ticker] = df
 
-        if len(data) == 1:
-            k = data.keys()
-            return data[tickers[0]]
-
         return data
 
-    def list_assets(self):
-        active_assets = self.api.list_assets(status='active')
-        return active_assets
+    def get_api(self):
+        return self.api
+
 
 
 

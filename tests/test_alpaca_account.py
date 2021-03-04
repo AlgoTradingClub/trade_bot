@@ -1,11 +1,11 @@
 import unittest
-from utils.Alpaca_Data import AlpacaData
+from trade_bot.utils.Alpaca_Account import AlpacaAccount
 
 
 class TestAlpacaData(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.a = AlpacaData()
+        self.a = AlpacaAccount()
 
     def tearDown(self) -> None:
         del self.a
@@ -26,11 +26,9 @@ class TestAlpacaData(unittest.TestCase):
         else:
             self.fail("Did not delete the secret key")
 
-    def test_get_data(self):
-        stonks = ["AAPL", "GMC", "AMC"]
-        data = self.a.get_bars_data(stonks, limit=2)
-        self.assertTrue(isinstance(data[stonks[0]]['high'][0], float))
-        self.assertTrue(len(data) == len(stonks))
+    def test_get_assets(self):
+        stuff = self.a.list_assets()
+        self.assertTrue(isinstance(stuff, list))
 
 
 if __name__ == '__main__':
