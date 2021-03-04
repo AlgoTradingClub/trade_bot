@@ -1,12 +1,13 @@
-from trade_bot.helpers.trading_manager import run_strategies, run_backtest
-from trade_bot.utils.Alpaca_Data import AlpacaData
+from helpers.trading_manager import run_strategies, run_backtest
+from utils.Alpaca_Data import AlpacaData
 from datetime import datetime, date
-from trade_bot.models.settings import Settings
+from models.settings import Settings
 from typing import List
 import numpy as np
 import subprocess
 from os import listdir, environ, path
 from os.path import isfile, join
+import pathlib
 
 
 def run_trade(paper: bool = True):
@@ -89,11 +90,11 @@ def current_stock_price(symbol: str):
     return ans
 
 
-def start_backtest(start, end, cash):
+def start_backtest(start, end):
     # making sure the dates are in the right format
     s = datetime.strptime(start, "%Y-%m-%d").strftime("%Y-%m-%d")
     e = datetime.strptime(end, "%Y-%m-%d").strftime("%Y-%m-%d")
-    return run_backtest(start=s, end=e)
+    run_backtest(start=s, end=e)
 
 
 def environ_checker() -> str:
@@ -110,11 +111,5 @@ def environ_checker() -> str:
 
 
 def tests():
-    testdir = join('..', 'trade_bot', 'tests')
-    CURR_DIR = path.dirname(path.realpath(__file__))
-    onlyfiles = [f for f in listdir(testdir) if isfile(join(testdir, f))]
-    for f in onlyfiles:
-        if f != "__init__.py":
-            print(f)
-            p = path.abspath(join(testdir, f))
-            subprocess.run(["python", f"{p}"])
+    testdir = pathlib.Path(__file__).resolve().parent.parent / 'tests'
+    subprocess.run(['python', '-m', 'unittest', 'discover', testdir])
