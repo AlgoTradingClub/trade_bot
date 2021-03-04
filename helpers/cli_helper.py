@@ -7,6 +7,7 @@ import numpy as np
 import subprocess
 from os import listdir, environ, path
 from os.path import isfile, join
+import pathlib
 
 
 def run_trade(paper: bool = True):
@@ -110,11 +111,5 @@ def environ_checker() -> str:
 
 
 def tests():
-    testdir = join('..', 'trade-bot', 'tests')
-    CURR_DIR = path.dirname(path.realpath(__file__))
-    onlyfiles = [f for f in listdir(testdir) if isfile(join(testdir, f))]
-    for f in onlyfiles:
-        if f != "__init__.py":
-            print(f)
-            p = join(testdir, f)
-            subprocess.run(["python", f"{p}"])
+    testdir = pathlib.Path(__file__).resolve().parent.parent / 'tests'
+    subprocess.run(['python', '-m', 'unittest', 'discover', testdir])
