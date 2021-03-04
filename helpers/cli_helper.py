@@ -73,7 +73,7 @@ def current_stock_price(symbol: str):
     r = d.get_bars_data([symbol], timeframe='day', from_year=today.year, from_month=today.month, from_day=today.day,
                         to_year=today.year, to_month=today.month, to_day=today.day, limit=1)
 
-    if r.empty:
+    if r[symbol].empty:
         symbols = [i.symbol for i in d.list_assets()]
         suggestion = min_edit_dist(symbol, symbols)
         return f"No data found for symbol '{symbol}'\n\n Did you mean '{suggestion}'?"

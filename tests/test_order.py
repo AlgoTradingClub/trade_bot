@@ -4,6 +4,12 @@ from trade_bot.models.Order import Order
 
 class TestOrder(unittest.TestCase):
 
+    def setUp(self) -> None:
+        ...
+
+    def tearDown(self) -> None:
+        ...
+
     def test_instantiation(self):
         try:
             Order('buy', "GMC", 2)
@@ -19,7 +25,6 @@ class TestOrder(unittest.TestCase):
             ("hold", "BTC"),
             ("SELL", 'GMC', 2.0),
             ("buy", "AAPL", 2.0, 'stop_limit'),
-
         ]
         for o in orders:
             try:
@@ -28,8 +33,6 @@ class TestOrder(unittest.TestCase):
                 continue
             else:
                 self.fail()
-
-
 
 
 if __name__ == '__main__':

@@ -1,6 +1,7 @@
 from alpaca_trade_api import REST
 from trade_bot.models.settings import Settings
 from os import environ
+from trade_bot.utils.Alpaca_Account import AlpacaAccount
 
 
 class Order:
@@ -42,19 +43,7 @@ class Order:
         """
         Puts the order in the correct format for alpaca, then sends the order
         """
-        key_names = Settings.keys_names
-        if paper:
-            key_id = key_names["Alpaca Paper Key ID"]
-            secret_key = key_names["Alpaca Paper Secret Key"]
-            base_url = "https://paper-api.alpaca.markets"
-        else:
-            key_id = key_names["Alpaca Live Key ID"]
-            secret_key = key_names["Alpaca Live Secret Key"]
-            base_url = "https://api.alpaca.markets"
-
-        key_id = environ[key_id]
-        secret_key = environ[secret_key]
-        api = REST(key_id, secret_key, base_url)
+        api = AlpacaAccount().get_api()
 
         if self.order_type == "trailing_stop":
             api.submit_order(
@@ -106,3 +95,13 @@ class Order:
     def __str__(self):
         s = f"Order -> {self.side} {self.asset} QTY:{self.qty} $AMOUNT: {self.notional} TYPE:{self.order_type}"
         return s
+
+    def __eq__(self, other):
+        same = True
+        same = same and self.__class__.__name__ == other.__class__.__name__
+        same = same and self.asset == other.asset
+        same = same and self.notional == other.notional
+        same = same and self.order_type == other.order_type
+        same = same and self.side == other.side
+
+        return same

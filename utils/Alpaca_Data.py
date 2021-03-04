@@ -13,7 +13,7 @@ class AlpacaData:
         200 api calls/ min
         """
         key_names = Settings.keys_names
-        base_url = "https://data.alpaca.markets/v2"
+        base_url = "https://data.alpaca.markets"
         if paper:
             key_id = key_names["Alpaca Paper Key ID"]
             secret_key = key_names["Alpaca Paper Secret Key"]
@@ -55,10 +55,6 @@ class AlpacaData:
             data[ticker] = df
 
         return data
-
-    def list_assets(self):
-        active_assets = self.api.list_assets(status='active')
-        return active_assets
 
     def get_api(self):
         return self.api

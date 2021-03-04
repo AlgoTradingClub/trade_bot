@@ -47,7 +47,6 @@ def run_strategies(paper=True):
 def run_backtest(start: str = "2020-01-01"
                  , end: str = date.today().strftime("%Y-%m-%d")
                  , cash: float = 10000.00):
-    # TODO is there a way to consolidate this and the list above?
 
     start = datetime.strptime(start, "%Y-%m-%d")
     end = datetime.strptime(end, "%Y-%m-%d")
