@@ -7,7 +7,8 @@ from trade_bot.utils.Alpaca_Account import AlpacaAccount
 class Order:
     def __init__(self, side: str, asset: str, qty: float = 0.0, o_type: str = "market", notional: float = 0.0,
                  time_in_force: str = 'day', limit_price: float = 0.0, stop_price: float = 0.0,
-                 trail_price: float = 0.0, trail_percent: float = 0.0, extended_hours: bool = False):
+                 trail_price: float = 0.0, trail_percent: float = 0.0, extended_hours: bool = False,
+                 do_not_condense: bool = False):
 
         self.qty = qty
         self.asset = asset.upper()
@@ -22,6 +23,7 @@ class Order:
         self.trail_price = trail_price
         self.trail_percent = trail_percent
         self.extended_hours = extended_hours
+        self.dont_condense = do_not_condense
         assert isinstance(self.qty, float) or isinstance(self.qty, int)
         assert self.side == 'buy' or self.side == 'sell'
         assert (self.notional > 0 and self.order_type == 'market') or (self.notional == 0 and self.qty > 0)
@@ -98,6 +100,7 @@ class Order:
         condense = condense and self.asset == other.asset
         condense = condense and self.order_type == other.order_type
         condense = condense and self.notional == '0.0' and other.notional == '0.0'
+        condense = condense and not self.dont_condense and not other.dont_condense
         return condense
 
     def __str__(self):
