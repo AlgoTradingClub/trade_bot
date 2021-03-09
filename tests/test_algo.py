@@ -1,5 +1,5 @@
 import unittest
-from trade_bot.models.Algo import Algorithm
+from models.Algo import Algorithm
 
 
 class TestAlgo(unittest.TestCase):

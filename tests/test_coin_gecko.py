@@ -1,4 +1,4 @@
-from trade_bot.utils.CoinGeckoData import CoinGecko
+from utils.CoinGeckoData import CoinGecko
 import unittest
 
 

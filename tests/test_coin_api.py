@@ -1,5 +1,5 @@
 import unittest
-from trade_bot.utils.CoinAPI_io import CoinAPI
+from utils.CoinAPI_io import CoinAPI
 
 
 class TestCoinAPI(unittest.TestCase):

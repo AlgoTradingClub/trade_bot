@@ -1,5 +1,5 @@
 import unittest
-from trade_bot.utils.Polygon import Poly
+from utils.Polygon import Poly
 
 
 class TestPolygon(unittest.TestCase):

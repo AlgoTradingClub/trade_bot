@@ -1,7 +1,7 @@
 from alpaca_trade_api import REST
-from trade_bot.models.settings import Settings
+from models.settings import Settings
 from os import environ
-from trade_bot.utils.Alpaca_Account import AlpacaAccount
+from utils.Alpaca_Account import AlpacaAccount
 
 
 class Order:

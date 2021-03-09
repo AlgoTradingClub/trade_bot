@@ -2,7 +2,7 @@ from typing import Dict, List
 import os
 import pandas as pd
 import datetime as date
-from trade_bot.models.settings import Settings
+from models.settings import Settings
 from pycoingecko import CoinGeckoAPI
 
 

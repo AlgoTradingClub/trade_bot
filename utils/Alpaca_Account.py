@@ -1,4 +1,4 @@
-from trade_bot.models.settings import Settings
+from models.settings import Settings
 from os import environ
 from alpaca_trade_api import REST
 

@@ -1,5 +1,5 @@
 import unittest
-from trade_bot.utils.Alpaca_Data import AlpacaData
+from utils.Alpaca_Data import AlpacaData
 
 
 class TestAlpacaData(unittest.TestCase):
