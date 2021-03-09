@@ -1,5 +1,6 @@
 from helpers.trading_manager import run_strategies, run_backtest
 from utils.Alpaca_Data import AlpacaData
+from utils.Alpaca_Account import AlpacaAccount
 from datetime import datetime, date
 from models.settings import Settings
 from typing import List
@@ -74,7 +75,8 @@ def current_stock_price(symbol: str):
                         to_year=today.year, to_month=today.month, to_day=today.day, limit=1)
 
     if r[symbol].empty:
-        symbols = [i.symbol for i in d.list_assets()]
+        account = AlpacaAccount()
+        symbols = [i.symbol for i in account.list_assets()]
         suggestion = min_edit_dist(symbol, symbols)
         return f"No data found for symbol '{symbol}'\n\n Did you mean '{suggestion}'?"
 

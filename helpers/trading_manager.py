@@ -1,7 +1,7 @@
 import datetime
 from trade_bot.models.mac1 import MAC as mac1
 from trade_bot.models.pairs1 import Pairs as pairs1
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from trade_bot.helpers.order_reconciler import OrderReconciler
 from trade_bot.models.PortfolioSim import Portfolio
 import logging
@@ -29,7 +29,7 @@ def run_strategies(paper=True):
     for obj in strategies:
         strat = obj()
         strat.before_trading()
-        orders = strat.trade(date.today())
+        orders = strat.trade(datetime.today())
         assert isinstance(orders, list)
         all_orders += orders
         strat.after_trading()
@@ -37,7 +37,7 @@ def run_strategies(paper=True):
     print("Submitting Orders")
     o_r = OrderReconciler(paper)
     o_r.place_order(all_orders)
-    logging.info(f"Date: {date.today().isoformat()}\n")
+    logging.info(f"Date: {datetime.today().isoformat()}\n")
     for o in orders:
         logging.info(f"\t - {str(o)}")
     print("Finished Running Strategies")
@@ -45,7 +45,7 @@ def run_strategies(paper=True):
 
 # TODO implement an option to only run one or some of the strategies
 def run_backtest(start: str = "2020-01-01"
-                 , end: str = date.today().strftime("%Y-%m-%d")
+                 , end: str = datetime.today().strftime("%Y-%m-%d")
                  , cash: float = 10000.00):
 
     start = datetime.strptime(start, "%Y-%m-%d")
