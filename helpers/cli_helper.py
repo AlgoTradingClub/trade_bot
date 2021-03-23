@@ -9,6 +9,8 @@ import subprocess
 from os import listdir, environ, path
 from os.path import isfile, join
 import pathlib
+import logging
+logger = logging.getLogger(__name__)
 
 
 def run_trade(paper: bool = True):
@@ -69,6 +71,7 @@ def min_edit_dist(str1: str, strings: List[str]) -> str:
 
 
 def current_stock_price(symbol: str):
+    logger.debug("Getting price info")
     d = AlpacaData()
     today = datetime.today()
     r = d.get_bars_data([symbol], timeframe='day', from_year=today.year, from_month=today.month, from_day=today.day,
