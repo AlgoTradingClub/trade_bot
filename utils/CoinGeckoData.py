@@ -7,7 +7,7 @@ from pycoingecko import CoinGeckoAPI
 
 
 class CoinGecko:
-    def __init__(self, paper=True):
+    def __init__(self):
         """
         I don't think there's any different in the data quality between paper and live accounts.
         200 api calls/ min
@@ -41,3 +41,4 @@ class CoinGecko:
 
 
 
+c = CoinGecko()
