@@ -7,6 +7,7 @@ from models.PortfolioSim import Portfolio
 import logging
 logger = logging.getLogger(__name__)
 
+
 strategies = [
         mac1,
         pairs1

@@ -1,4 +1,5 @@
 # AS of 2/28/2021, polygon access is no longer available from alpaca keys.
+import sys
 from polygon import RESTClient
 from models.settings import Settings
 import os
