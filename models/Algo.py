@@ -7,6 +7,7 @@ from datetime import datetime
 from models.Context import Context
 import sys
 
+NOT_IMPL_MSG = "I was not overridden in the child class. Exiting to prevent errors."
 
 class Algorithm:
     def __init__(self):
@@ -17,14 +18,12 @@ class Algorithm:
         self.orders = []
 
     def before_trading(self) -> None:
-        print("I was not overridden in the child class. Exiting to prevent errors.")
-        raise NotImplementedError
+        raise NotImplementedError(NOT_IMPL_MSG)
 
     def trade(self, today: datetime, context: Context) -> List[Order]:
         print("I was not overridden in the child class. Exiting to prevent errors.")
         raise NotImplementedError
 
     def after_trading(self) -> None:
-        print("I was not overridden in the child class. Exiting to prevent errors.")
-        raise NotImplementedError
+        raise NotImplementedError(NOT_IMPL_MSG)
 
