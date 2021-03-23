@@ -10,7 +10,7 @@ maybe using 'click' or 'fire'. They seem a bit more friendly than 'argparse'
 '''
 import click
 import os
-from trade_bot.helpers.cli_helper import run_trade, current_stock_price, start_backtest, environ_checker, tests
+from helpers.cli_helper import run_trade, current_stock_price, start_backtest, environ_checker, tests
 from pathlib import Path
 import logging
 from logging.config import fileConfig
@@ -110,7 +110,9 @@ if __name__ == '__main__':
     log_format = (
         '[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s')
 
-    config_file_path = Path('logs/') / 'tradeBot.log'
+    currDir = Path(__file__).parent.absolute()
+    print("Current dir", str(currDir))
+    config_file_path = currDir / 'logs' / 'tradeBot.log'
 
     logging.basicConfig(
         level=logging.DEBUG,
