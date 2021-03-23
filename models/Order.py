@@ -1,13 +1,15 @@
 from alpaca_trade_api import REST
-from trade_bot.models.settings import Settings
+from models.settings import Settings
 from os import environ
-from trade_bot.utils.Alpaca_Account import AlpacaAccount
+from utils.Alpaca_Account import AlpacaAccount
 
 
 class Order:
     def __init__(self, side: str, asset: str, qty: float = 0.0, o_type: str = "market", notional: float = 0.0,
                  time_in_force: str = 'day', limit_price: float = 0.0, stop_price: float = 0.0,
-                 trail_price: float = 0.0, trail_percent: float = 0.0, extended_hours: bool = False):
+                 trail_price: float = 0.0, trail_percent: float = 0.0, extended_hours: bool = False,
+                 do_not_condense: bool = False):
+
         self.qty = qty
         self.asset = asset.upper()
         self.notional = notional  # the dollar amount you want to trade
@@ -21,6 +23,7 @@ class Order:
         self.trail_price = trail_price
         self.trail_percent = trail_percent
         self.extended_hours = extended_hours
+        self.dont_condense = do_not_condense
         assert isinstance(self.qty, float) or isinstance(self.qty, int)
         assert self.side == 'buy' or self.side == 'sell'
         assert (self.notional > 0 and self.order_type == 'market') or (self.notional == 0 and self.qty > 0)
@@ -91,6 +94,14 @@ class Order:
                 type=self.order_type,
                 time_in_force=self.time_in_force,
             )
+            
+    def condensable(self, other) -> bool:
+        condense = True
+        condense = condense and self.asset == other.asset
+        condense = condense and self.order_type == other.order_type
+        condense = condense and self.notional == '0.0' and other.notional == '0.0'
+        condense = condense and not self.dont_condense and not other.dont_condense
+        return condense
 
     def __str__(self):
         s = f"Order -> {self.side} {self.asset} QTY:{self.qty} $AMOUNT: {self.notional} TYPE:{self.order_type}"
@@ -103,5 +114,12 @@ class Order:
         same = same and self.notional == other.notional
         same = same and self.order_type == other.order_type
         same = same and self.side == other.side
+        same = same and self.time_in_force == other.time_in_force
+
+        if float(self.limit_price) > 0 or float(self.stop_price) > 0 or float(self.trail_price) > 0:
+            raise NotImplementedError
+        if float(other.limit_price) > 0 or float(other.stop_price) > 0 or float(other.trail_price) > 0:
+            raise NotImplementedError
+            # TODO don't know how to deal with these comparisons yet, so just break
 
         return same

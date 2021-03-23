@@ -1,6 +1,6 @@
 import unittest
-from trade_bot.helpers.order_reconciler import OrderReconciler
-from trade_bot.models.Order import Order
+from helpers.order_reconciler import OrderReconciler
+from models.Order import Order
 
 
 class TestOrderReconciler(unittest.TestCase):

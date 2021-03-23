@@ -34,6 +34,33 @@ class TestOrder(unittest.TestCase):
             else:
                 self.fail()
 
+    def test_condense(self):
+        orders = [
+            ("buy", "GMC", 2.5),
+            ("buy", 'GMC', 3.0),
+        ]
+        objs = [Order(*o) for o in orders]
+
+        self.assertTrue(objs[0].condensable(objs[1]))
+
+    def test_condense2(self):
+        orders = [
+            ("buy", "GMC", 2.5),
+            ("sell", 'GMC', 3.0),
+        ]
+        objs = [Order(*o) for o in orders]
+
+        self.assertTrue(objs[0].condensable(objs[1]))
+
+    def test_condense3(self):
+        orders = [
+            ("buy", "GMC", 2.5),
+            ("buy", 'GMC', 3.0, 'limit', 0.0, 'day', 150.0),
+        ]
+        objs = [Order(*o) for o in orders]
+
+        self.assertFalse(objs[0].condensable(objs[1]))
+
 
 if __name__ == '__main__':
     unittest.main()

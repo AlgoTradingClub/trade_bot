@@ -1,5 +1,6 @@
 from helpers.trading_manager import run_strategies, run_backtest
 from utils.Alpaca_Data import AlpacaData
+from utils.Alpaca_Account import AlpacaAccount
 from datetime import datetime, date
 from models.settings import Settings
 from typing import List
@@ -8,6 +9,8 @@ import subprocess
 from os import listdir, environ, path
 from os.path import isfile, join
 import pathlib
+import logging
+logger = logging.getLogger(__name__)
 
 
 def run_trade(paper: bool = True):
@@ -68,13 +71,15 @@ def min_edit_dist(str1: str, strings: List[str]) -> str:
 
 
 def current_stock_price(symbol: str):
+    logger.debug("Getting price info")
     d = AlpacaData()
     today = datetime.today()
     r = d.get_bars_data([symbol], timeframe='day', from_year=today.year, from_month=today.month, from_day=today.day,
                         to_year=today.year, to_month=today.month, to_day=today.day, limit=1)
 
     if r[symbol].empty:
-        symbols = [i.symbol for i in d.list_assets()]
+        account = AlpacaAccount()
+        symbols = [i.symbol for i in account.list_assets()]
         suggestion = min_edit_dist(symbol, symbols)
         return f"No data found for symbol '{symbol}'\n\n Did you mean '{suggestion}'?"
 

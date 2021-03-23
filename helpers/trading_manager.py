@@ -1,14 +1,11 @@
 import datetime
 from trade_bot.models.mac1 import MAC as mac1
 from trade_bot.models.pairs1 import Pairs as pairs1
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from trade_bot.helpers.order_reconciler import OrderReconciler
 from trade_bot.models.PortfolioSim import Portfolio
 import logging
-import pathlib
-
-base_dir = pathlib.Path(__file__).resolve().parent.parent / 'logs' / 'trades.log'
-logging.basicConfig(filename=base_dir)
+logger = logging.getLogger(__name__)
 
 
 strategies = [
@@ -24,29 +21,29 @@ def run_strategies(paper=True):
     It compiles all the order in a list and hand this off to the order reconciler
     The order reconciler will remove redundancies and check that the order can be made
     """
-    print("running")
+    print("Running...")
 
     all_orders = []
     for obj in strategies:
         strat = obj()
         strat.before_trading()
-        orders = strat.trade(date.today())
+        orders = strat.trade(datetime.today())
         assert isinstance(orders, list)
         all_orders += orders
         strat.after_trading()
 
-    print("Submitting Orders")
+    print("Submitting Orders...")
     o_r = OrderReconciler(paper)
     o_r.place_order(all_orders)
-    logging.info(f"Date: {date.today().isoformat()}\n")
-    for o in orders:
-        logging.info(f"\t - {str(o)}")
+    logger.info(f"Date: {datetime.today().isoformat()}")
+    for o in all_orders:
+        logger.warning(f"Order Made. Type={'PAPER' if paper else 'LIVE'} {str(o)}")
     print("Finished Running Strategies")
 
 
 # TODO implement an option to only run one or some of the strategies
 def run_backtest(start: str = "2020-01-01"
-                 , end: str = date.today().strftime("%Y-%m-%d")
+                 , end: str = datetime.today().strftime("%Y-%m-%d")
                  , cash: float = 10000.00):
 
     start = datetime.strptime(start, "%Y-%m-%d")

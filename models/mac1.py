@@ -12,15 +12,15 @@ class MAC(Algorithm):
         self.data = self.AlpacaData.get_bars_data("AAPL")  # TODO needs to change
 
     def trade(self, today: date) -> List[Order]:
-        std_bars_time = "T22:00:00"
+        assert isinstance(today, datetime)
         window = 7.0
 
         previous = today - timedelta(days=window)
-        iso = previous.isoformat()
+        iso = previous.strftime("%Y-%m-%d")
         df = self.data["AAPL"]
-        p_data = df.loc[df['time'] == iso+std_bars_time]['close'].values[0]  # getting close price in the past
+        p_data = df.loc[df['time'] == iso]['close'].values[0]  # getting close price in the past
 
-        curr = self.AlpacaData.get_bars_data("AAPL", '5Min', today.year, today.month, today.day,
+        curr = self.AlpacaData.get_bars_data("AAPL", 'day', today.year, today.month, today.day,
                                       today.year, today.month, today.day, limit=5)
         curr_data = curr["AAPL"].at[curr["AAPL"].index[-1], 'close']  # getting most recent closing price
 
