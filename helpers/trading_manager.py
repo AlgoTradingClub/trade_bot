@@ -1,9 +1,9 @@
 import datetime
-from trade_bot.models.mac1 import MAC as mac1
-from trade_bot.models.pairs1 import Pairs as pairs1
+from models.mac1 import MAC as mac1
+from models.pairs1 import Pairs as pairs1
 from datetime import datetime, timedelta
-from trade_bot.helpers.order_reconciler import OrderReconciler
-from trade_bot.models.PortfolioSim import Portfolio
+from helpers.order_reconciler import OrderReconciler
+from models.PortfolioSim import Portfolio
 import logging
 logger = logging.getLogger(__name__)
 

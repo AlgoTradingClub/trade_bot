@@ -2,17 +2,24 @@
 Apes Together!
 
 # Introduction
-- To show that we can make money, and our simple strategies are rock solid!
+- A trading bot system that is designed to back test algorithms, perform paper trading, and live trading through Alpaca trading
+  
+- To show that we can make money, and our simple strategies are rock solid! 
+  Combines the four parts necessary for a trade bot:
+  1) An algorithm
+	2) A source of market data
+	3) An order reconciler that removes bad attempted orders and stops extra fines/ taxes from occuring
+	4) Easy Access such that crontab or another automatic scheduler program can run this daily.
 
 # Technologies
-Python >= 3.8
-polygon-api-client==0.1.9
-requests==2.25.1
-pandas==1.2.1
-numpy==1.20.1
-click==7.1.2
-pytest==6.2.2
-alpaca-trade-api==1.0.1
+- Python >= 3.8
+- polygon-api-client==0.1.9
+- requests==2.25.1
+- pandas==1.2.1
+- numpy==1.20.1
+- click==7.1.2
+- pytest==6.2.2
+- alpaca-trade-api==1.0.1
 
 
 # Setup
@@ -31,6 +38,8 @@ Add only by Pull Request. This paragraph should explain what that means.
 `$ cd trading-bot-venv`
 - Activate the virtual environment
 `$ source Scripts/activate`
+  (This is for linux or IOS. When setting up a virtualenv, make sure to do this in a linux or Mac environment. 
+  If you are using Windows, please download git and use the git bash that comes with this. https://appuals.com/what-is-git-bash/)
 - Whenever you see `(trading-bot-venv)` in parentheses after every command in terminal, you know you are in an activated virtual environment. To leave a virtual environment, close the terminal or `$ deactivate`
 - Now, whenever you work on the project, activate the virtual environment before coding, and you'll be good to go.
 - If you want to use PyCharm or another IDE, simply open the folder `trading-bot-venv` in the IDE, and it should recognize that you are using a virtual environment.
