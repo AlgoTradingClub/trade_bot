@@ -83,12 +83,12 @@ def current_stock_price(symbol: str):
         suggestion = min_edit_dist(symbol, symbols)
         return f"No data found for symbol '{symbol}'\n\n Did you mean '{suggestion}'?"
 
-    date = datetime.strptime(r['time'][0], "%Y-%m-%dT%H:%M:%S").strftime("%Y-%m-%d")
-    o = r['open'][0]
-    close = r['close'][0]
-    high = r['high'][0]
-    low = r['low'][0]
-    vol = r['volume'][0]
+    date = str(r[symbol]['time'][0])
+    o = r[symbol]['open'][0]
+    close = r[symbol]['close'][0]
+    high = r[symbol]['high'][0]
+    low = r[symbol]['low'][0]
+    vol = r[symbol]['volume'][0]
     ans = f"The day's aggregates of {date} for '{symbol}' are:\n\n" \
           f"\t   High: ${high}\n\t    Low: ${low}\n\t   Open: ${o}\n\t  Close: ${close}\n\t Volume: {vol}"
 
