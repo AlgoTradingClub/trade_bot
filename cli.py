@@ -111,6 +111,9 @@ if __name__ == '__main__':
         '[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s')
 
     currDir = Path(__file__).parent.absolute()
+    
+    if 'logs' not in [file for file in os.listdir(currDir) if os.path.isdir(file)]:
+        os.mkdir('logs')
     config_file_path = currDir / 'logs' / 'tradeBot.log'
 
     logging.basicConfig(
