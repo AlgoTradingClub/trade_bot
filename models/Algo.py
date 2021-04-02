@@ -18,12 +18,12 @@ class Algorithm:
         self.data = ""
         self.orders = []
 
-    def before_trading(self) -> None:
+    def before_trading(self, first_trading_day: datetime, last_trading_day: datetime) -> None:
         raise NotImplementedError(NOT_IMPL_MSG)
 
     def trade(self, today: datetime, context: Context) -> List[Order]:
         print("I was not overridden in the child class. Exiting to prevent errors.")
-        raise NotImplementedError
+        raise NotImplementedError(NOT_IMPL_MSG)
 
     def after_trading(self) -> None:
         raise NotImplementedError(NOT_IMPL_MSG)

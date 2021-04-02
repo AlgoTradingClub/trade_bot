@@ -1,4 +1,5 @@
 import unittest
+from datetime import datetime
 from models.Algo import Algorithm
 
 
@@ -14,7 +15,7 @@ class TestAlgo(unittest.TestCase):
         ran = False
         try:
             self.a = Algorithm()
-            self.a.before_trading()
+            self.a.before_trading(datetime.today(), datetime.today())
         except NotImplementedError:
             pass
         else:
