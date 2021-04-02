@@ -9,6 +9,7 @@ import sys
 
 NOT_IMPL_MSG = "I was not overridden in the child class. Exiting to prevent errors."
 
+
 class Algorithm:
     def __init__(self):
         self.AlpacaData = AlpacaData()
