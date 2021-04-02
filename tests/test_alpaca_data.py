@@ -7,9 +7,6 @@ class TestAlpacaData(unittest.TestCase):
     def setUp(self) -> None:
         self.a = AlpacaData()
 
-    def tearDown(self) -> None:
-        del self.a
-
     def test_no_key_id(self):
         try:
             self.a.key_id
