@@ -15,7 +15,7 @@ class Algorithm:
         self.AlpacaData = AlpacaData()
         self.CoinAPI = CoinAPI()
         self.PolyApi = Poly()
-        self.data = ""
+        self.data = dict()
         self.orders = []
 
     def before_trading(self, first_trading_day: datetime, last_trading_day: datetime) -> None:

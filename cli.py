@@ -117,7 +117,7 @@ if __name__ == '__main__':
     config_file_path = currDir / 'logs' / 'tradeBot.log'
 
     logging.basicConfig(
-        level=logging.DEBUG,
+        level=logging.WARNING,
         format=log_format,
         filename=config_file_path,
     )

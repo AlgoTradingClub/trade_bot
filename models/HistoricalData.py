@@ -16,6 +16,14 @@ class HistoricalData:
         self.empty = True
         self.data = None
         self.granular_data = False
+        self.flexible_days = 3
+
+    def convert_datetime(self, d: datetime):
+        if self.granular_data:
+            fmt = "%Y-%m-%dT%H:%M:%s"
+        else:
+            fmt = "%Y-%m-%d"
+        return d.strftime(fmt)
 
     def load_df(self, df: pd.DataFrame):
         # do stuff
@@ -49,13 +57,48 @@ class HistoricalData:
             logger.error("No data found in HistoricalData Object. Aborting")
             raise LookupError
 
-    def check_date_range(self, begin: datetime, end: datetime) -> bool:
+    def check_date_range(self, begin: datetime, end: datetime, flexible=False) -> bool:
         """
         The data can check to see if it has enough data to complete
         :return:
         """
         assert isinstance(begin, datetime) and isinstance(end, datetime)
         self.check_empty()
+        og_begin = begin
+        og_end = end
+
+        if flexible:
+            begin_found = False
+            for i in range(self.flexible_days):
+                if (self.data.loc[self.data['time'] == self.convert_datetime(begin)]).empty:
+                    begin = begin - timedelta(days=1)
+                else:
+                    begin_found = True
+                    if begin != og_begin:
+                        logger.warning(f"Data was not found for {og_begin} so it checked {begin}")
+                    break
+
+            if not begin_found:
+                logger.error(f"Data could not be found beginning range {og_begin}")
+                return False
+
+            for i in range(self.flexible_days):
+                if (self.data.loc[self.data['time'] == self.convert_datetime(end)]).empty:
+                    begin = begin - timedelta(days=1)
+                else:
+                    if begin != og_begin:
+                        logger.warning(f"Data was not found for {og_end} so it checked {end}")
+                    return True
+
+            logger.error(f"Data could not be found end range {og_end}")
+            return False
+
+        else:
+            if not (self.data.loc[self.data['time'] == self.convert_datetime(begin)]).empty:
+                if not (self.data.loc[self.data['time'] == self.convert_datetime(end)]).empty:
+                    return True
+
+            return False
 
     def get_single_price(self, d: datetime, flexible=False, category: str = "close") -> float:
         """
@@ -70,9 +113,9 @@ class HistoricalData:
         assert category in {'close', 'open', 'high', 'low'}
 
         if flexible:
-            for i in range(3):  # the market is never out for more than 3 days ??? TODO
+            for i in range(self.flexible_days):  # the market is never out for more than 3 days ??? TODO
                 d = d - timedelta(i)
-                iso = d.strftime("%Y-%m-%d")
+                iso = self.convert_datetime(d)
                 data_series = self.data.loc[self.data['time'] == iso][category]
                 if data_series.empty:
                     continue
@@ -83,7 +126,7 @@ class HistoricalData:
             raise ValueError("Data was not found even after looking backward 3 days\n", str(self.data))
 
         else:
-            iso = d.strftime("%Y-%m-%d")
+            iso = self.convert_datetime(d)
             data_series = self.data.loc[self.data['time'] == iso][category]
             if data_series.empty:
                 return -1.0
@@ -98,9 +141,8 @@ class HistoricalData:
 
         iso_begin = begin.strftime("%Y-%m-%d")
         iso_end = end.strftime("%Y-%m-%d")
-        data_series = self.data.loc[iso_end >= self.data['time'] >= iso_begin][category]
+        data_series = self.data.loc[(iso_end >= self.data['time']) & (self.data['time'] >= iso_begin)][category]
         if data_series.empty:
             return -1.0
         else:
-
-            return sum(data_series.values) / len(data_series.value)
+            return sum(data_series.values) / len(data_series.values)
