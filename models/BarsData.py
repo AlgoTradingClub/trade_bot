@@ -16,11 +16,11 @@ class HistoricalData:
         self.empty = True
         self.data = None
         self.granular_data = False
-        self.flexible_days = 3
+        self.flexible_days = 5  # for example some markets are closed for good firday and 
 
-    def convert_datetime(self, d: datetime):
-        if self.granular_data:
-            fmt = "%Y-%m-%dT%H:%M:%s"
+    def convert_datetime(self, d: datetime, ignore_time=False):
+        if self.granular_data and not ignore_time:
+            fmt = "%Y-%m-%dT%H:%M:%S"
         else:
             fmt = "%Y-%m-%d"
         return d.strftime(fmt)
@@ -45,7 +45,8 @@ class HistoricalData:
         # check the format of the time col
         if all(bool(re.search(r"\d{4}-\d{2}-\d{2}\b", v)) for v in time_value):
             return df
-        elif all(bool(re.search(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{0,6}\b", v)) for v in time_value):
+        elif all(bool(re.search(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.?\d{0,6}\b", v)) for v in time_value):
+            # looking for iso format (may or maynot include the miliseconds)
             self.granular_data = True
             # This historical data has more than one piece of data per day
             return df
@@ -100,7 +101,7 @@ class HistoricalData:
 
             return False
 
-    def get_single_price(self, d: datetime, flexible=False, category: str = "close") -> float:
+    def get_single_price(self, d: datetime, flexible=False, ignore_time = True, category: str = "close") -> float:
         """
         Return the closing/opening/etc price for a given day
         :param d: the date of the price
@@ -115,8 +116,12 @@ class HistoricalData:
         if flexible:
             for i in range(self.flexible_days):  # the market is never out for more than 3 days ??? TODO
                 d = d - timedelta(i)
-                iso = self.convert_datetime(d)
-                data_series = self.data.loc[self.data['time'] == iso][category]
+                iso = self.convert_datetime(d, ignore_time)
+                if ignore_time:
+                    data_series = self.data.loc[self.data['time'].str.startswith(iso)][category]
+                else:
+                    data_series = self.data.loc[self.data['time'] == iso][category]
+
                 if data_series.empty:
                     continue
                 else:
