@@ -27,6 +27,7 @@ class MAC(Algorithm):
         iso = previous.strftime("%Y-%m-%d")
 
         test = self.data.get_single_price(previous, flexible=True)
+        rolling_test = self.data.get_rolling_average(previous, today)
         curr = self.AlpacaData.get_bars_data("AAPL", 'day', today.year, today.month, today.day,
                                       today.year, today.month, today.day, limit=5)
         curr_data = curr["AAPL"].at[curr["AAPL"].index[-1], 'close']  # getting most recent closing price
