@@ -1,6 +1,7 @@
 from helpers.trading_manager import run_strategies, run_backtest
 from utils.Alpaca_Data import AlpacaData
 from utils.Alpaca_Account import AlpacaAccount
+from utils.CoinGeckoData import CoinGecko
 from datetime import datetime, date
 from models.settings import Settings
 from typing import List
@@ -23,8 +24,7 @@ def current_stock_price(symbol: str):
     logger.debug("Getting price info")
     d = AlpacaData()
     today = datetime.today()
-    r = d.get_bars_data([symbol], timeframe='day', from_year=today.year, from_month=today.month, from_day=today.day,
-                        to_year=today.year, to_month=today.month, to_day=today.day, limit=1)
+    r = d.get_bars_data([symbol], today, today)
 
     if r[symbol].empty:
         account = AlpacaAccount()
@@ -66,7 +66,6 @@ def environ_checker() -> str:
 
     s += "\nModule Check\n"
 
-
     req_modules = ['pycoingecko', 'polygon-api-client', 'polygon-api-client',
                    'requests', 'pandas', 'click', 'alpaca-trade-api']
     for mod in req_modules:
@@ -88,3 +87,10 @@ def tests():
     # the virtualenv
     testdir = pathlib.Path(__file__).resolve().parent.parent / 'tests'
     subprocess.run([sys.executable, '-m', 'unittest', 'discover', testdir])
+
+
+def current_coin_price(coin, currency):
+    logger.debug(f"Getting {coin} price info")
+    cg = CoinGecko()
+    return cg.get_current_coin_price([coin], currency)
+

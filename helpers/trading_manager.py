@@ -4,6 +4,7 @@ from models.pairs1 import Pairs as pairs1
 from datetime import datetime, timedelta
 from helpers.order_reconciler import OrderReconciler
 from models.PortfolioSim import Portfolio
+from models.Algo import Algorithm
 from models.Context import Context
 import logging
 logger = logging.getLogger(__name__)
@@ -11,7 +12,8 @@ logger = logging.getLogger(__name__)
 
 strategies = [
         mac1,
-        pairs1
+        pairs1,
+        Context
     ]
 
 
@@ -29,6 +31,11 @@ def run_strategies(paper=True):
     context = Context()
     for obj in strategies:
         strat = obj()
+        try:
+            assert isinstance(strat, Algorithm)
+        except AssertionError:
+            logger.error(f"The strat, {strat.__class__.__name__}, is not a child instance of Algorithm")
+            exit(1)
         strat.before_trading(first_trading_day, last_trading_day)
         orders = strat.trade(datetime.today(), context)
         assert isinstance(orders, list)
@@ -70,9 +77,14 @@ def run_backtest(start: str = "2020-01-01"
         day = start + timedelta(i)
         orders = []
         for strat in my_objs:
+            try:
+                assert isinstance(strat, Algorithm)
+            except AssertionError:
+                logger.error(f"The strat, {strat.__class__.__name__}, is not a child instance of Algorithm")
+                exit(1)
             strat.before_trading(start, end)
             print(f"running strat {strat.__class__.__name__} for day {day.strftime('%Y-%m-%d')}")
-            orders += strat.trade(day, context = Context())
+            orders += strat.trade(day, context=context)
             strat.after_trading()
 
         my_orders = o_r.backtest_orders(orders)

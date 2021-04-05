@@ -11,7 +11,7 @@ maybe using 'click' or 'fire'. They seem a bit more friendly than 'argparse'
 import click
 import os
 import sys
-from helpers.cli_helper import run_trade, current_stock_price, start_backtest, environ_checker, tests
+from helpers.cli_helper import run_trade, current_stock_price, start_backtest, environ_checker, tests, current_coin_price
 from pathlib import Path
 import logging
 from logging.config import fileConfig
@@ -89,6 +89,21 @@ def get_stock_price(symbol):
     print("Retrieving Data")
     logger.info(f"Retrieving data for symbol {symbol.upper()}")
     p = current_stock_price(symbol.upper())
+    click.echo(p)
+
+@cli.command(name="coin")
+@click.argument('coin', type=str)
+@click.option('-c', '-curr', 'currency', default='usd', type=str, show_default=True)
+def get_coin_price(coin, currency):
+    """
+    Get the last price of 'coin'
+    :param coin: The name of the cryptocurrency
+    :param currency: The name of the comparative currency, i.e. usd, yen, eur, btc, etc...
+    :return: str
+    """
+    print("Retrieving Data")
+    logger.info(f"Retrieving data for symbol {coin.lower()} vs {currency.lower()}")
+    p = current_coin_price(coin.lower(), currency.lower())
     click.echo(p)
 
 
