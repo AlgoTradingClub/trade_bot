@@ -53,14 +53,33 @@ def start_backtest(start, end, cash=1000):
 
 def environ_checker() -> str:
     key_names = Settings.keys_names
+    failed = 0
     s = "API Keys Check:\n" + "-"*80 + "\n"
     for key in key_names:
         if key_names[key] in environ:
             line = f"{key} Passed:".rjust(32, " ") + f" '{key_names[key]}' found in $PATH.\n"
         else:
+            failed += 1
             line = f"{key} Failed:".rjust(32, " ") + f" Add '{key_names[key]}' in $PATH variable. " \
                  f"See README.md ('Sign up for an alpaca account') for how to add variable to path. \n"
         s += line
+
+    s += "\nModule Check\n"
+
+
+    req_modules = ['pycoingecko', 'polygon-api-client', 'polygon-api-client',
+                   'requests', 'pandas', 'click', 'alpaca-trade-api']
+    for mod in req_modules:
+        try:
+            __import__(mod)
+        except ImportError:
+            s += f"Failed: Module {mod} not found in virtual env \n"
+            failed += 1
+        else:
+            s += f"Passed: Module {mod} not found in virtual env \n"
+
+    s += "API Keys Check:\n" + "-" * 80
+
     return s
 
 
