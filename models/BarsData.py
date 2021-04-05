@@ -5,7 +5,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class HistoricalData:
+class BarsData:
     """
     A wrapper for the alpaca and polygon data to be used in the algorithms.
     This is stop rewriting code to access data in the algorithm
@@ -16,7 +16,8 @@ class HistoricalData:
         self.empty = True
         self.data = None
         self.granular_data = False
-        self.flexible_days = 5  # for example some markets are closed for good firday and 
+        self.flexible_days = 5
+        # for example some markets are closed for good friday and easter monday, so 4 days closed
 
     def convert_datetime(self, d: datetime, ignore_time=False):
         if self.granular_data and not ignore_time:

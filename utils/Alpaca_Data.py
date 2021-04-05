@@ -34,11 +34,7 @@ class AlpacaData:
         if isinstance(tickers, str):
             tickers = [tickers]
 
-        if timeframe != 'day':
-            print("function cannot support not daily bars as of now. This causes a problem with how the df stores"
-                  "the time stamps and will cause problems for the algorithms that are trying to access the data"
-                  "during their trade() functions.")
-            raise NotImplementedError
+        assert timeframe in {"minute", "1Min", "5Min", "15Min", "day"}  # minute == 1Min
 
         assert isinstance(tickers, list)
 
@@ -57,7 +53,7 @@ class AlpacaData:
                                 'high': bar._raw['h'],
                                 'low': bar._raw['l'],
                                 'volume': bar._raw['v'],
-                                'time': t.strftime("%Y-%m-%d")},
+                                'time': t.isoformat()},
                                ignore_index=True)
             data[ticker] = df
 

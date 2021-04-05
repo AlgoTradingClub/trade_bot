@@ -10,6 +10,7 @@ maybe using 'click' or 'fire'. They seem a bit more friendly than 'argparse'
 '''
 import click
 import os
+import sys
 from helpers.cli_helper import run_trade, current_stock_price, start_backtest, environ_checker, tests
 from pathlib import Path
 import logging
@@ -96,6 +97,7 @@ def run_test():
     """
     Runs automated test
     """
+    print("Interpreter Location: ", sys.executable)
     logger.info("Running tests")
     tests()
 

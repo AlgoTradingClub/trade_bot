@@ -7,6 +7,7 @@ from typing import List
 import numpy as np
 import subprocess
 from os import listdir, environ, path
+import sys
 from os.path import isfile, join
 from utils.Min_Edit_Distance import levenshtein, min_edit_dist
 import pathlib
@@ -64,5 +65,7 @@ def environ_checker() -> str:
 
 
 def tests():
+    # having sys.executable run instead of a basic 'python' command ensures that the pytest still runs underneath of
+    # the virtualenv
     testdir = pathlib.Path(__file__).resolve().parent.parent / 'tests'
-    subprocess.run(['python', '-m', 'unittest', 'discover', testdir])
+    subprocess.run([sys.executable, '-m', 'unittest', 'discover', testdir])

@@ -1,6 +1,6 @@
 from models.Algo import Algorithm
 from models.Order import Order
-from models.HistoricalData import HistoricalData
+from models.BarsData import BarsData
 from models.Context import Context
 from typing import List
 from datetime import datetime, timedelta
@@ -12,7 +12,7 @@ class MAC(Algorithm):
 
     def before_trading(self, first_trading_day: datetime, last_trading_day: datetime) -> None:
         if not isinstance(self.data, dict) or 'AAPL' not in self.data:
-            hd = HistoricalData('AAPL')
+            hd = BarsData('AAPL')
             data = self.AlpacaData.get_bars_data("AAPL")  # TODO needs to change
             hd.load_df(data['AAPL'])
             self.data['AAPL'] = hd
@@ -29,8 +29,7 @@ class MAC(Algorithm):
         test = self.data["AAPL"].get_single_price(previous, flexible=True)
         rolling_test = self.data["AAPL"].get_rolling_average(previous, today)
         test2 = self.data["AAPL"].check_date_range(previous, today, flexible=True)
-        curr = self.AlpacaData.get_bars_data("AAPL", 'day', today,
-                                      today, limit=5)
+        curr = self.AlpacaData.get_bars_data("AAPL", timeframe='15Min', start=today, end=today, limit=5)
         # TODO get actual real market data. I htink i just ahve to get bars data at a smaller scale (hour or minute).
         curr_data = curr["AAPL"].at[curr["AAPL"].index[-1], 'close']  # getting most recent closing price
 

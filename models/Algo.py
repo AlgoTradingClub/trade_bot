@@ -16,7 +16,16 @@ class Algorithm:
         self.CoinAPI = CoinAPI()
         self.PolyApi = Poly()
         self.data = dict()
+        """
+        A dictionary of historicalData (might expand later)
+        EXAMPLE:
+        {'AAPL': HistoricalData object AAPL,
+        'TSLA': HistoricalData object TELSA}
+        """
         self.orders = []
+        """
+        A list of Order objects
+        """
 
     def before_trading(self, first_trading_day: datetime, last_trading_day: datetime) -> None:
         raise NotImplementedError(NOT_IMPL_MSG)

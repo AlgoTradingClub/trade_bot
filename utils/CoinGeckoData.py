@@ -4,6 +4,8 @@ import pandas as pd
 import datetime as date
 # from models.settings import Settings
 from utils.Min_Edit_Distance import levenshtein, min_edit_dist
+import sys
+print("PyTest Location: ", sys.executable)
 from pycoingecko import CoinGeckoAPI
 
 
@@ -23,6 +25,7 @@ class CoinGecko:
             ...
             print("No response. Please check the accuracy of your symbols and currencies.")
             print(self.__find_coin_id(symbols[0], self.get_all_coin_ids()))
+            return None
 
         return resp
 
@@ -30,6 +33,7 @@ class CoinGecko:
         """
         By default, returns the the data in 1 hour time segments
         """
+        assert isinstance(symbol, list)
         resp = self.api.get_coin_market_chart_by_id(symbol, currency, days)
         print(resp)
         return resp
