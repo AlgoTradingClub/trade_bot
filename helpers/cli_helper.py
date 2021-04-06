@@ -2,14 +2,11 @@ from helpers.trading_manager import run_strategies, run_backtest
 from utils.Alpaca_Data import AlpacaData
 from utils.Alpaca_Account import AlpacaAccount
 from utils.CoinGeckoData import CoinGecko
-from datetime import datetime, date
+from datetime import datetime
 from models.settings import Settings
-from typing import List
-import numpy as np
 import subprocess
-from os import listdir, environ, path
+from os import environ
 import sys
-from os.path import isfile, join
 from utils.Min_Edit_Distance import levenshtein, min_edit_dist
 import pathlib
 import logging
