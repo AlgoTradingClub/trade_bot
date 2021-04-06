@@ -14,7 +14,7 @@ class TestCoinAPI(unittest.TestCase):
         self.assertTrue(1 == 1)
 
     def test_get_curr_price(self):
-        resp = self.api.get_price('bitcoin', 'usd')
+        resp = self.api.get_price(['bitcoin'], 'usd')
         self.assertTrue(resp)
 
     def test_get_curr_price_bad(self):
@@ -34,14 +34,14 @@ class TestCoinAPI(unittest.TestCase):
 
     def test_get_historical_data_bad(self):
         try:
-            self.api.get_historical_data('bitcoin', 10)
+            self.api.get_historical_data('bitcoin', 1)
             self.fail()
         except AssertionError:
             self.assertTrue(True)
 
     def test_get_historical_data(self):
-        resp = self.api.get_historical_data(['bitcoin'], 10)
-        self.assertTrue(resp)
+        resp = self.api.get_historical_data(['bitcoin'], 1)
+        self.assertTrue(not resp.empty)
 
 
 if __name__ == '__main__':
