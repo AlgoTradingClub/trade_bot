@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 strategies = [
         mac1,
         pairs1,
-        Context
+
     ]
 
 

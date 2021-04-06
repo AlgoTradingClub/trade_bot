@@ -1,7 +1,7 @@
 from typing import Dict, List
 import os
 import pandas as pd
-import datetime as date
+from datetime import datetime
 # from models.settings import Settings
 from utils.Min_Edit_Distance import levenshtein, min_edit_dist
 from pycoingecko import CoinGeckoAPI
@@ -48,20 +48,36 @@ class CoinGecko:
         elif not resp[symbols[0]]:
             # empty response
             s += "No response. Please check the accuracy of your currencies.\n"
-            s += self.__find_coin_id(currency, self.get_supported_vs_currencies())
+            s += self.__find_currency_id(currency, self.get_supported_vs_currencies())
             return s
         else:
             s += f"Current price of {symbols[0]} vs {currency} is: {resp[symbols[0]][currency]}"
             return s
 
-    def get_historical_data(self, symbol: str, days: int, currency='usd'):
+    def get_historical_data(self, symbol: str, days: int, currency='usd') -> pd.DataFrame:
         """
         By default, returns the the data in 1 hour time segments
         """
         assert isinstance(symbol, list)
-        resp = self.api.get_coin_market_chart_by_id(symbol, currency, days)
-        print(resp)
-        return resp
+        try:
+            resp = self.api.get_coin_market_chart_by_id(symbol, currency, days)
+        except ValueError as e:
+            print(self.__find_coin_id(symbol[0], self.get_coins_list()))
+            return None
+        else:
+            df = pd.DataFrame(columns=['price', 'marketCap', 'volume', 'time'])
+            for i in range(len(resp['prices'])):
+                timestamp = datetime.fromtimestamp(resp['prices'][i][0] / 1000)
+                df = df.append({
+                    'price': resp['prices'][i][1],
+                    'marketCap': resp['market_caps'][i][1],
+                    'volume': resp['total_volumes'][i][1],
+                    'time': timestamp.isoformat()
+                }, ignore_index=True)
+
+            df = df.sort_values(by='time', ascending=False)
+            df = df.reset_index(drop=True)
+            return df
 
     def get_supported_vs_currencies(self):
         """
