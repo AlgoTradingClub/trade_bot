@@ -4,13 +4,16 @@ from models.pairs1 import Pairs as pairs1
 from datetime import datetime, timedelta
 from helpers.order_reconciler import OrderReconciler
 from models.PortfolioSim import Portfolio
+from models.Algo import Algorithm
+from models.Context import Context
 import logging
 logger = logging.getLogger(__name__)
 
 
 strategies = [
         mac1,
-        pairs1
+        pairs1,
+        Context
     ]
 
 
@@ -24,10 +27,17 @@ def run_strategies(paper=True):
     print("Running...")
 
     all_orders = []
+    first_trading_day = last_trading_day = datetime.today()
+    context = Context()
     for obj in strategies:
         strat = obj()
-        strat.before_trading()
-        orders = strat.trade(datetime.today())
+        try:
+            assert isinstance(strat, Algorithm)
+        except AssertionError:
+            logger.error(f"The strat, {strat.__class__.__name__}, is not a child instance of Algorithm")
+            exit(1)
+        strat.before_trading(first_trading_day, last_trading_day)
+        orders = strat.trade(datetime.today(), context)
         assert isinstance(orders, list)
         all_orders += orders
         strat.after_trading()
@@ -60,15 +70,21 @@ def run_backtest(start: str = "2020-01-01"
     results = []
     portfolio = Portfolio(cash)
     o_r = OrderReconciler()
+    context = Context()
     my_objs = [obj() for obj in strategies]
 
     for i in range(diff.days + 1):
         day = start + timedelta(i)
         orders = []
         for strat in my_objs:
-            strat.before_trading()
+            try:
+                assert isinstance(strat, Algorithm)
+            except AssertionError:
+                logger.error(f"The strat, {strat.__class__.__name__}, is not a child instance of Algorithm")
+                exit(1)
+            strat.before_trading(start, end)
             print(f"running strat {strat.__class__.__name__} for day {day.strftime('%Y-%m-%d')}")
-            orders += strat.trade(day)
+            orders += strat.trade(day, context=context)
             strat.after_trading()
 
         my_orders = o_r.backtest_orders(orders)

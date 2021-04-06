@@ -2,7 +2,7 @@ import alpaca_trade_api as tradeapi
 from typing import Dict
 import os
 import pandas as pd
-import datetime as date
+from datetime import datetime, timedelta
 from models.settings import Settings
 
 
@@ -28,35 +28,32 @@ class AlpacaData:
         del key_id, secret_key
 
     def get_bars_data(self, tickers: list, timeframe: str = 'day',
-                      from_year: int = 2020, from_month: int = 1, from_day: int = 1,
-                      to_year: int = 2021, to_month: int = 2, to_day: int = 26, limit=1000, ) -> Dict[str, pd.DataFrame]:
+                      start: datetime = datetime.now() - timedelta(days=31), end: datetime = datetime.now(),
+                      limit=1000) -> Dict[str, pd.DataFrame]:
 
         if isinstance(tickers, str):
             tickers = [tickers]
 
-        if timeframe != 'day':
-            print("function cannot support not daily bars as of now. This causes a problem with how the df stores"
-                  "the time stamps and will cause problems for the algorithms that are trying to access the data"
-                  "during their trade() functions.")
-            raise NotImplementedError
+        assert timeframe in {"minute", "1Min", "5Min", "15Min", "day"}  # minute == 1Min
 
         assert isinstance(tickers, list)
 
-        start = date.date(from_year, from_month, from_day).isoformat()
-        end = date.date(to_year, to_month, to_day).isoformat()
+        start = start.isoformat()
+        end = end.isoformat()
 
         data = {}
         for ticker in tickers:
+            print(f"Getting bars data for {ticker} from {start} to {end} ...")
             response = self.api.get_barset(ticker, timeframe, limit, start, end)
             df = pd.DataFrame(columns=['close', 'open', 'high', 'low', 'volume', 'time'])
             for bar in response[ticker]:
-                t = date.datetime.fromtimestamp(bar._raw['t'])
+                t = datetime.fromtimestamp(bar._raw['t'])
                 df = df.append({'close': bar._raw['c'],
                                 'open': bar._raw['o'],
                                 'high': bar._raw['h'],
                                 'low': bar._raw['l'],
                                 'volume': bar._raw['v'],
-                                'time': t.strftime("%Y-%m-%d")},
+                                'time': t.isoformat()},
                                ignore_index=True)
             data[ticker] = df
 

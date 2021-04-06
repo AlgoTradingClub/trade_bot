@@ -20,6 +20,7 @@ Apes Together!
 - click==7.1.2
 - pytest==6.2.2
 - alpaca-trade-api==1.0.1
+- pycoingecko==1.4.0
 
 
 # Setup

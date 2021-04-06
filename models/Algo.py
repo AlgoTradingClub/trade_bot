@@ -9,20 +9,30 @@ import sys
 
 NOT_IMPL_MSG = "I was not overridden in the child class. Exiting to prevent errors."
 
+
 class Algorithm:
     def __init__(self):
         self.AlpacaData = AlpacaData()
         self.CoinAPI = CoinAPI()
         self.PolyApi = Poly()
-        self.data = ""
+        self.data = dict()
+        """
+        A dictionary of historicalData (might expand later)
+        EXAMPLE:
+        {'AAPL': HistoricalData object AAPL,
+        'TSLA': HistoricalData object TELSA}
+        """
         self.orders = []
+        """
+        A list of Order objects
+        """
 
-    def before_trading(self) -> None:
+    def before_trading(self, first_trading_day: datetime, last_trading_day: datetime) -> None:
         raise NotImplementedError(NOT_IMPL_MSG)
 
     def trade(self, today: datetime, context: Context) -> List[Order]:
         print("I was not overridden in the child class. Exiting to prevent errors.")
-        raise NotImplementedError
+        raise NotImplementedError(NOT_IMPL_MSG)
 
     def after_trading(self) -> None:
         raise NotImplementedError(NOT_IMPL_MSG)
