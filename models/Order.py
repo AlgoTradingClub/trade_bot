@@ -15,6 +15,7 @@ class Order:
         self.notional = notional  # the dollar amount you want to trade
         order_types = ['limit', 'market', 'stop', 'stop_limit', 'trailing_stop']
         force_types = ['day', 'gtc', 'opg', 'cls', 'ioc', 'fok']
+        # day, good til canceled, at the open, at the close, immediate or cancel, fill or kill
         self.time_in_force = time_in_force
         self.order_type = o_type
         self.side = side
