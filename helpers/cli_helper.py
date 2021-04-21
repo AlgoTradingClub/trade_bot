@@ -96,3 +96,8 @@ def current_coin_price(coin, currency):
     cg = CoinGecko()
     return cg.get_current_coin_price([coin], currency)
 
+
+def list_alpaca_assets(shortable=False, fractionable=False, show_names=False):
+    aa = AlpacaAccount()
+    return aa.list_assets(shortable=shortable, fractionable=fractionable, show_names=show_names)
+

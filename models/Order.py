@@ -8,7 +8,7 @@ class Order:
     def __init__(self, side: str, asset: str, qty: float = 0.0, o_type: str = "market", notional: float = 0.0,
                  time_in_force: str = 'day', limit_price: float = 0.0, stop_price: float = 0.0,
                  trail_price: float = 0.0, trail_percent: float = 0.0, extended_hours: bool = False,
-                 do_not_condense: bool = False):
+                 do_not_condense: bool = False, in_alpaca=True, print_out=False):
 
         self.qty = qty
         self.asset = asset.upper()
@@ -25,6 +25,8 @@ class Order:
         self.trail_percent = trail_percent
         self.extended_hours = extended_hours
         self.dont_condense = do_not_condense
+        self.in_alpaca = in_alpaca
+        self.print_out = print_out
         assert isinstance(self.qty, float) or isinstance(self.qty, int)
         assert self.side == 'buy' or self.side == 'sell'
         assert (self.notional > 0 and self.order_type == 'market') or (self.notional == 0 and self.qty > 0)
@@ -43,10 +45,15 @@ class Order:
         self.trail_price = str(self.trail_price)
         self.trail_percent = str(self.trail_percent)
 
-    def send_to_alpaca(self, paper=True):
+    def send_to_alpaca(self, paper=True) -> None:
         """
         Puts the order in the correct format for alpaca, then sends the order
         """
+        if not self.in_alpaca:
+            if self.print_out:
+                print(self.__str__())
+
+            return
         api = AlpacaAccount().get_api()
 
         if self.order_type == "trailing_stop":
@@ -104,11 +111,11 @@ class Order:
         condense = condense and not self.dont_condense and not other.dont_condense
         return condense
 
-    def __str__(self):
+    def __str__(self) -> str:
         s = f"Order -> {self.side} {self.asset} QTY:{self.qty} $AMOUNT: {self.notional} TYPE:{self.order_type}"
         return s
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         same = True
         same = same and self.__class__.__name__ == other.__class__.__name__
         same = same and self.asset == other.asset

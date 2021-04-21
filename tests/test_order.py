@@ -4,12 +4,6 @@ from models.Order import Order
 
 class TestOrder(unittest.TestCase):
 
-    def setUp(self) -> None:
-        ...
-
-    def tearDown(self) -> None:
-        ...
-
     def test_instantiation(self):
         try:
             Order('buy', "GMC", 2)
@@ -33,6 +27,8 @@ class TestOrder(unittest.TestCase):
                 continue
             else:
                 self.fail()
+
+        self.assertTrue(True)
 
     def test_condense(self):
         orders = [

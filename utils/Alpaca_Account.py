@@ -23,6 +23,28 @@ class AlpacaAccount:
     def get_api(self):
         return self.api
 
-    def list_assets(self):
+    def list_assets(self, shortable=False, fractionable=False, show_names=False):
         active_assets = self.api.list_assets(status='active')
-        return active_assets
+        myfilter = []
+        if shortable and fractionable:
+            for asset in active_assets:
+                if asset.easy_to_borrow and asset.marginable and asset.fractionable:
+                    myfilter.append(asset)
+
+        elif shortable:
+            for asset in active_assets:
+                if asset.easy_to_borrow and asset.marginable:
+                    myfilter.append(asset)
+
+        elif fractionable:
+            for asset in active_assets:
+                if asset.fractionable:
+                    myfilter.append(asset)
+
+        else:
+            myfilter = active_assets
+
+        if show_names:
+            return [f"{i.name} :: '{i.symbol}'" for i in myfilter]
+        else:
+            return [i.symbol for i in myfilter]
