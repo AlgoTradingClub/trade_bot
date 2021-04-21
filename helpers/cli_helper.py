@@ -1,10 +1,13 @@
 from helpers.trading_manager import run_strategies, run_backtest
+from utils.Find_Pairs import find_pairs
 from utils.Alpaca_Data import AlpacaData
 from utils.Alpaca_Account import AlpacaAccount
 from utils.CoinGeckoData import CoinGecko
 from datetime import datetime
+import pathlib as p
 from models.settings import Settings
 import subprocess
+from typing import List
 from os import environ
 import sys
 from utils.Min_Edit_Distance import levenshtein, min_edit_dist
@@ -100,4 +103,19 @@ def current_coin_price(coin, currency):
 def list_alpaca_assets(shortable=False, fractionable=False, show_names=False):
     aa = AlpacaAccount()
     return aa.list_assets(shortable=shortable, fractionable=fractionable, show_names=show_names)
+
+
+def find_and_save_pairs():
+    find_pairs()
+
+
+def download_bars_data(timespan: int, symbols: List[str] = None, replace_old_data=False):
+    data_dir = p.Path(__file__).parent.parent.joinpath("data").joinpath("bars")
+    if symbols is None or not isinstance(symbols, list):
+        aa = AlpacaAccount()
+        symbols = aa.list_assets(shortable=True, fractionable=True)
+    api = AlpacaData()
+    api.download_bars_data(str(data_dir), symbols, timespan, replace_old_data)
+
+
 
