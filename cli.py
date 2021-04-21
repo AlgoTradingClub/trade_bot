@@ -11,7 +11,8 @@ maybe using 'click' or 'fire'. They seem a bit more friendly than 'argparse'
 import click
 import os
 import sys
-from helpers.cli_helper import run_trade, current_stock_price, start_backtest, environ_checker, tests, current_coin_price
+from helpers.cli_helper import run_trade, current_stock_price, start_backtest, environ_checker, \
+    tests, current_coin_price, list_alpaca_assets
 from pathlib import Path
 import logging
 from logging.config import fileConfig
@@ -115,6 +116,23 @@ def run_test():
     print("Interpreter Location: ", sys.executable)
     logger.info("Running tests")
     tests()
+
+@cli.command(name="list_stocks")
+@click.option('--s', '--shortable', 'shortable', is_flag=True, default=False, type=bool, show_default=True)
+@click.option('--f', '--fractionable', 'fractionable', is_flag=True, default=False, type=bool, show_default=True)
+@click.option('--n', '--names', 'show_names', is_flag=True, default=False, type=bool, show_default=True)
+def list_stocks(shortable: bool, fractionable: bool, show_names: bool):
+    """
+    Lists Alpaca Assets. Can be filtered in a variety of ways
+    """
+    logger.info("Getting lists of stocks")
+    click.echo(f"  List of Alpaca Assets"
+               f"{' that are' if shortable or fractionable else ''} "
+               f"{'shortable' if shortable else ''}"
+               f"{'fractionable' if fractionable and not shortable else ''}"
+               f"{' and fractionable:' if fractionable and shortable else ':'}\n")
+    resp = list_alpaca_assets(shortable=shortable, fractionable=fractionable, show_names=show_names)
+    click.echo(f"{resp}\n\n   ++ Total: {len(resp)} ++")
 
 
 '''

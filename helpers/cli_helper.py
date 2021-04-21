@@ -21,7 +21,7 @@ def current_stock_price(symbol: str):
     logger.debug("Getting price info")
     d = AlpacaData()
     today = datetime.today()
-    r = d.get_bars_data([symbol], today, today)
+    r = d.get_bars_data([symbol], timeframe='minute', start=today, end=today, limit=5)
 
     if r[symbol].empty:
         account = AlpacaAccount()
@@ -29,12 +29,17 @@ def current_stock_price(symbol: str):
         suggestion = min_edit_dist(symbol, symbols)
         return f"No data found for symbol '{symbol}'\n\n Did you mean '{suggestion}'?"
 
-    date = str(r[symbol]['time'][0])
-    o = r[symbol]['open'][0]
-    close = r[symbol]['close'][0]
-    high = r[symbol]['high'][0]
-    low = r[symbol]['low'][0]
-    vol = r[symbol]['volume'][0]
+    idx = 0
+    length = len(r[symbol]['time'])
+    if r[symbol]['time'][0] < r[symbol]['time'][length - 1]:
+        idx = length - 1
+
+    date = str(r[symbol]['time'][idx])
+    o = r[symbol]['open'][idx]
+    close = r[symbol]['close'][idx]
+    high = r[symbol]['high'][idx]
+    low = r[symbol]['low'][idx]
+    vol = r[symbol]['volume'][idx]
     ans = f"The day's aggregates of {date} for '{symbol}' are:\n\n" \
           f"\t   High: ${high}\n\t    Low: ${low}\n\t   Open: ${o}\n\t  Close: ${close}\n\t Volume: {vol}"
 
@@ -90,4 +95,9 @@ def current_coin_price(coin, currency):
     logger.debug(f"Getting {coin} price info")
     cg = CoinGecko()
     return cg.get_current_coin_price([coin], currency)
+
+
+def list_alpaca_assets(shortable=False, fractionable=False, show_names=False):
+    aa = AlpacaAccount()
+    return aa.list_assets(shortable=shortable, fractionable=fractionable, show_names=show_names)
 

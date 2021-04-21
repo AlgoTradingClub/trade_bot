@@ -12,8 +12,8 @@ class MAC(Algorithm):
 
     def before_trading(self, first_trading_day: datetime, last_trading_day: datetime) -> None:
         if not isinstance(self.data, dict) or 'AAPL' not in self.data:
-            hd = BarsData('AAPL')
-            data = self.AlpacaData.get_bars_data("AAPL")  # TODO needs to change
+            hd = BarsData('bitcoin')
+            data = self.CoinAPI.get_historical_data('bitcoin', 10, 'usd')
             hd.load_df(data['AAPL'])
             self.data['AAPL'] = hd
         else:
