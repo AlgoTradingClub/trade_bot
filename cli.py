@@ -145,17 +145,29 @@ def calc_pairs():
 
 @cli.command(name="download_data")
 @click.option('-t', '-timespan', 'timespan', default=180, type=int, show_default=True)
-@click.option('-s', '-syms', 'symbols', default=None, type=str, show_default=True) # TODO remove default
+@click.option('-s', '-syms', 'symbols', default=None, type=str, show_default=True)
 @click.option('--r', '--replace', 'replace_old_data', is_flag=True, default=False, type=bool, show_default=True)
-def download_asset_data(timespan: int, symbols, replace_old_data):
+def download_asset_data(timespan: int, symbols: str, replace_old_data: bool) -> None:
+    """
+    Downloads market data, in form of daily bars aggregates, from Alpaca. Necessary for back-testing.
+    :param timespan: The number of days of data you want. I.E 365 would be the last year of data
+    :param symbols: A single stock symbol ('TSLA') or a list separated by commas ('TSLA,MSFT,AAPL')
+    :param replace_old_data: Replace any existing data found in trade_bot/data/bars/
+    :return: None
+    """
     click.echo("Starting Download into trade_bot/data/bars/ . This will take a while.")  # TODO make this a estimated time
-    if isinstance(symbols, str):
-        symbols = [symbols.upper()]
-    elif symbols is None:
+    if symbols is None:
         click.echo("Do you want to download all tradeable stock from alpaca? There are about 1400 Stocks.")
         ans = input("(y/N) -->")
         if ans != 'y':
             exit()
+    elif not isinstance(symbols, str):
+        click.echo("Invalid symbol arg. Please type '-syms TSLA' for one stock or '-syms TSLA,AAPL,MSFT' for multiple")
+    elif ',' in symbols:
+        symbols = symbols.split(',')
+        symbols = list(map(lambda x: x.upper(), symbols))
+    elif ',' not in symbols:
+        symbols = [symbols.upper()]
     else:
         exit()
 

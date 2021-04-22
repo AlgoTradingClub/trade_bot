@@ -111,7 +111,7 @@ def find_and_save_pairs():
 
 def download_bars_data(timespan: int, symbols: List[str] = None, replace_old_data=False):
     data_dir = p.Path(__file__).parent.parent.joinpath("data").joinpath("bars")
-    if symbols is None or not isinstance(symbols, list):
+    if symbols is None:
         aa = AlpacaAccount()
         symbols = aa.list_assets(shortable=True, fractionable=True)
     api = AlpacaData()

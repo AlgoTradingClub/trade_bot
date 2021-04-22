@@ -73,7 +73,7 @@ class AlpacaData:
     def download_bars_data(self, download_path: str, symbols: List[str], timespan: int, replace_old_data=False) -> None:
         data_dir = p.Path(download_path)
         if not data_dir.is_dir():
-            raise ValueError(f"the given download path doesn't exists\n{download_path}"
+            raise ValueError(f"The given download path doesn't exists\n{download_path}"
                              f"\nPlease make this directory and try again")
         now = datetime.today()
         begin = now - timedelta(timespan)
@@ -95,13 +95,22 @@ class AlpacaData:
                           f"support your request of start={begin.strftime('%Y-%m-%d')}.\n>>Rewriting the entire file.")
                     data = self.get_bars_data([sym], 'day', start=begin, end=now, limit=timespan * 5 // 7,
                                               print_out=False)
-                    df = data[sym]
+                    if data[sym].empty:
+                        print(f"No data found for symbol {sym}")
+                    else:
+                        df = data[sym]
                 else:
                     # appending new data
                     print(f"({i + 1} of {len(symbols)}) Appending to existing data {sym}")
-                    e_data = self.get_bars_data([sym], 'day', start=begin, end=now, limit=days_off_current, print_out=False)
-                    df = df.append(e_data[sym])
-                    df = df.drop_duplicates(subset=['time'])
+                    if days_off_current == 0:
+                        print(f"Saved data for {sym} is up to date")
+                    else:
+                        e_data = self.get_bars_data([sym], 'day', start=begin, end=now, limit=days_off_current, print_out=False)
+                        if e_data[sym].empty:
+                            print(f"No data found for symbol {sym}")
+                        else:
+                            df = df.append(e_data[sym])
+                            df = df.drop_duplicates(subset=['time'])
 
                 df = df.sort_values(by='time', ascending=False)
                 df = df.reset_index(drop=True)
@@ -111,4 +120,7 @@ class AlpacaData:
                 # Limit is the driving factor over start and end. So to reduce time, were estimating the number of
                 # trading days between start and end with 5 of the 7 days of the week
                 data = self.get_bars_data([sym], 'day', start=begin, end=now, limit=timespan * 5 // 7, print_out=False)
-                data[sym].to_csv(str(f), index=False, mode="w+")
+                if data[sym].empty:
+                    print(f"No data found for symbol {sym}")
+                else:
+                    data[sym].to_csv(str(f), index=False, mode="w+")
