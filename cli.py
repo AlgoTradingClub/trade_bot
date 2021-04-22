@@ -146,13 +146,13 @@ def calc_pairs():
 @cli.command(name="download_data")
 @click.option('-t', '-timespan', 'timespan', default=180, type=int, show_default=True)
 @click.option('-s', '-syms', 'symbols', default=None, type=str, show_default=True) # TODO remove default
-@click.option('-r', '-replace', 'replace_old_data', default=False, type=bool, show_default=True)
+@click.option('--r', '--replace', 'replace_old_data', is_flag=True, default=False, type=bool, show_default=True)
 def download_asset_data(timespan: int, symbols, replace_old_data):
     click.echo("Starting Download into trade_bot/data/bars/ . This will take a while.")  # TODO make this a estimated time
     if isinstance(symbols, str):
         symbols = [symbols.upper()]
     elif symbols is None:
-        click.echo("Do you want to download all tradable stock from alpaca? There are about 1800 Stocks.")
+        click.echo("Do you want to download all tradeable stock from alpaca? There are about 1400 Stocks.")
         ans = input("(y/N) -->")
         if ans != 'y':
             exit()
@@ -190,5 +190,5 @@ if __name__ == '__main__':
     with open(config_file_path, 'r') as f:
         lines = f.readlines()
         if len(lines) > 1000:
-            click.echo(f"The length of the log file {config_file_path} is longer than 1000 lines. "
+            click.echo(f"The length of the log file ,{config_file_path}, is longer than 1000 lines. "
                        f"Consider purging the file.")

@@ -52,7 +52,7 @@ class AlpacaData:
         for ticker in tickers:
             if print_out:
                 print(f"Getting bars data for {ticker} from {start} to {end} ...")
-            response = self.api.get_barset(ticker, timeframe, limit, start, end)
+            response = self.api.get_barset(ticker, timeframe, limit=limit, start=start, end=end, )
             df = pd.DataFrame(columns=['close', 'open', 'high', 'low', 'volume', 'time'])
             for bar in response[ticker]:
                 t = datetime.fromtimestamp(bar._raw['t'])
@@ -71,14 +71,8 @@ class AlpacaData:
         return self.api
 
     def download_bars_data(self, download_path: str, symbols: List[str], timespan: int, replace_old_data=False) -> None:
-        # check to see if data exists
-        # if files are there
-            # open files with pandas, append to them if necessary. Maybe open both new and old data in pands,
-            # concatonate the two and let pandas sort out the time stamps
-        # else no data or replace_old_data
-            #
-        dir = p.Path(download_path)
-        if not dir.is_dir():
+        data_dir = p.Path(download_path)
+        if not data_dir.is_dir():
             raise ValueError(f"the given download path doesn't exists\n{download_path}"
                              f"\nPlease make this directory and try again")
         now = datetime.today()
@@ -86,13 +80,12 @@ class AlpacaData:
         for i in range(len(symbols)):
             sym = symbols[i]
             sym = sym.upper()
-            f = dir.joinpath(f"{sym}.csv")
+            f = data_dir.joinpath(f"{sym}.csv")
             if f.exists() and not replace_old_data:
                 print(f"({i+1} of {len(symbols)}) Appending to existing data {sym} found")
                 df = pd.read_csv(str(f))
                 df = df.sort_values(by='time', ascending=False)
                 df = df.reset_index(drop=True)
-                # TODO check if it satisfies the begin and end bounds, else get bars data
                 days_off_current = (now - datetime.fromisoformat(df['time'][0])).days
                 if days_off_current < 0:
                     days_off_current = 0
@@ -109,11 +102,11 @@ class AlpacaData:
                 df = df.reset_index(drop=True)
                 df.to_csv(str(f), index=False)
             else:
-                print(f"({i+1} of {len(symbols)}) Finding data for {sym}")
+                print(f"({i+1} of {len(symbols)}) Finding data for {sym} from {begin} to {now}")
                 # Limit is the driving factor over start and end. So to reduce time, were estimating the number of
                 # trading days between start and end with 5 of the 7 days of the week
-                data = self.get_bars_data([sym], 'day', start=begin, end=now, limit=timespan*5//7, print_out=False)
-                data[sym].to_csv(str(f), index=False)
+                data = self.get_bars_data([sym], 'day', start=begin, end=now, limit=timespan * 5 // 7, print_out=False)
+                data[sym].to_csv(str(f), index=False, mode="w+")
 
 
 
