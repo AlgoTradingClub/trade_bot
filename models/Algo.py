@@ -2,6 +2,7 @@ from models.Order import Order
 from utils.Alpaca_Data import AlpacaData
 from utils.CoinAPI_io import CoinAPI
 from utils.Polygon import Poly
+from utils.CoinGeckoData import CoinGecko
 from typing import List
 from datetime import datetime
 from models.Context import Context
@@ -15,6 +16,7 @@ class Algorithm:
         self.AlpacaData = AlpacaData()
         self.CoinAPI = CoinAPI()
         self.PolyApi = Poly()
+        self.CoinGecko = CoinGecko()
         self.data = dict()
         """
         A dictionary of historicalData (might expand later)

@@ -1,6 +1,7 @@
 import datetime
-from models.mac1 import MAC as mac1
-from models.pairs1 import Pairs as pairs1
+from models.algos.mac1 import MAC as mac1
+from models.algos.pairs1 import Pairs as pairs1
+from models.algos.mac2_btc import MAC2
 from datetime import datetime, timedelta
 from helpers.order_reconciler import OrderReconciler
 from models.PortfolioSim import Portfolio
@@ -13,7 +14,7 @@ logger = logging.getLogger(__name__)
 strategies = [
         mac1,
         pairs1,
-
+        MAC2
     ]
 
 
