@@ -91,14 +91,14 @@ class AlpacaData:
                 days_off_past = (datetime.fromisoformat(df['time'].iloc[-1]) - begin).days
                 if days_off_past > 0:
                     # alpaca-trade-api sdk is weird and wont give segments of data in the past, so easier to overwrite
-                    print(f"The data found in file {f} does not go back into the past to "
-                          f"support your request of start={begin}. Rewriting the entire file.")
+                    print(f"({i+1} of {len(symbols)})\n>>The data found in file {sym}.csv does not go back into the past far enough to "
+                          f"support your request of start={begin.strftime('%Y-%m-%d')}.\n>>Rewriting the entire file.")
                     data = self.get_bars_data([sym], 'day', start=begin, end=now, limit=timespan * 5 // 7,
                                               print_out=False)
                     df = data[sym]
                 else:
                     # appending new data
-                    print(f"({i + 1} of {len(symbols)}) Appending to existing data {sym} found")
+                    print(f"({i + 1} of {len(symbols)}) Appending to existing data {sym}")
                     e_data = self.get_bars_data([sym], 'day', start=begin, end=now, limit=days_off_current, print_out=False)
                     df = df.append(e_data[sym])
                     df = df.drop_duplicates(subset=['time'])
