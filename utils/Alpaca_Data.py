@@ -82,7 +82,6 @@ class AlpacaData:
             sym = sym.upper()
             f = data_dir.joinpath(f"{sym}.csv")
             if f.exists() and not replace_old_data:
-                print(f"({i+1} of {len(symbols)}) Appending to existing data {sym} found")
                 df = pd.read_csv(str(f))
                 df = df.sort_values(by='time', ascending=False)
                 df = df.reset_index(drop=True)
@@ -90,26 +89,26 @@ class AlpacaData:
                 if days_off_current < 0:
                     days_off_current = 0
                 days_off_past = (datetime.fromisoformat(df['time'].iloc[-1]) - begin).days
-                if days_off_past < 0:
-                    days_off_past = 0
-                e_data = self.get_bars_data([sym], 'day', start=begin, end=now, limit=days_off_current, print_out=False)
-                s_data = self.get_bars_data([sym], 'day', start=begin, end=datetime.fromisoformat(df['time'].iloc[-1]),
-                                              limit=days_off_past, print_out=False)
-                df = df.append(e_data[sym])
-                df = df.append(s_data[sym])
-                df = df.drop_duplicates(subset=['time'])
+                if days_off_past > 0:
+                    # alpaca-trade-api sdk is weird and wont give segments of data in the past, so easier to overwrite
+                    print(f"The data found in file {f} does not go back into the past to "
+                          f"support your request of start={begin}. Rewriting the entire file.")
+                    data = self.get_bars_data([sym], 'day', start=begin, end=now, limit=timespan * 5 // 7,
+                                              print_out=False)
+                    df = data[sym]
+                else:
+                    # appending new data
+                    print(f"({i + 1} of {len(symbols)}) Appending to existing data {sym} found")
+                    e_data = self.get_bars_data([sym], 'day', start=begin, end=now, limit=days_off_current, print_out=False)
+                    df = df.append(e_data[sym])
+                    df = df.drop_duplicates(subset=['time'])
+
                 df = df.sort_values(by='time', ascending=False)
                 df = df.reset_index(drop=True)
-                df.to_csv(str(f), index=False)
+                df.to_csv(str(f), index=False, mode='w+')
             else:
                 print(f"({i+1} of {len(symbols)}) Finding data for {sym} from {begin} to {now}")
                 # Limit is the driving factor over start and end. So to reduce time, were estimating the number of
                 # trading days between start and end with 5 of the 7 days of the week
                 data = self.get_bars_data([sym], 'day', start=begin, end=now, limit=timespan * 5 // 7, print_out=False)
                 data[sym].to_csv(str(f), index=False, mode="w+")
-
-
-
-
-
-
