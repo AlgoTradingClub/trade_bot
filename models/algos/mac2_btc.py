@@ -6,15 +6,15 @@ from typing import List
 from datetime import datetime, timedelta
 
 
-class MAC(Algorithm):
+class MAC2(Algorithm):
     def __init__(self):
-        super(MAC, self).__init__()
+        super(MAC2, self).__init__()
 
     def before_trading(self, first_trading_day: datetime, last_trading_day: datetime) -> None:
         if not isinstance(self.data, dict) or 'AAPL' not in self.data:
             hd = BarsData('bitcoin')
-            data = self.CoinAPI.get_historical_data('bitcoin', 10, 'usd')
-            hd.load_df(data['AAPL'])
+            data = self.CoinGecko.get_historical_data(['bitcoin'], 10, 'usd')
+            hd.load_df(data)
             self.data['AAPL'] = hd
         else:
             self.data["AAPL"].check_date_range(first_trading_day, last_trading_day)

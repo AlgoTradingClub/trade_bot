@@ -28,7 +28,7 @@ def current_stock_price(symbol: str):
 
     if r[symbol].empty:
         account = AlpacaAccount()
-        symbols = [i.symbol for i in account.list_assets()]
+        symbols = [i for i in account.list_assets()]
         suggestion = min_edit_dist(symbol, symbols)
         return f"No data found for symbol '{symbol}'\n\n Did you mean '{suggestion}'?"
 
