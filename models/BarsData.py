@@ -1,17 +1,19 @@
 from datetime import datetime, timedelta
+from models.Data import Data
 import pandas as pd
 import re
 import logging
 logger = logging.getLogger(__name__)
 
 
-class BarsData:
+class BarsData(Data):
     """
     A wrapper for the alpaca and polygon data to be used in the algorithms.
     This is stop rewriting code to access data in the algorithm
     Also to reduce the time to test code so that it doesn't have to retrieve every time in "before_testing"
     """
     def __init__(self, symbol: str):
+        super(BarsData, self)
         self.symbol = symbol
         self.empty = True
         self.data = None

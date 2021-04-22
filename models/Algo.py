@@ -1,4 +1,5 @@
 from models.Order import Order
+from models.Data import Data
 from utils.Alpaca_Data import AlpacaData
 from utils.CoinAPI_io import CoinAPI
 from utils.Polygon import Poly
@@ -6,9 +7,9 @@ from utils.CoinGeckoData import CoinGecko
 from typing import List
 from datetime import datetime
 from models.Context import Context
-import sys
 
-NOT_IMPL_MSG = "I was not overridden in the child class. Exiting to prevent errors."
+NOT_IMPL_MSG = "I was not overridden in the child class. " \
+               "\nExiting to prevent errors."
 
 
 class Algorithm:
@@ -17,14 +18,14 @@ class Algorithm:
         self.CoinAPI = CoinAPI()
         self.PolyApi = Poly()
         self.CoinGecko = CoinGecko()
-        self.data = dict()
+        self.__data = dict()
         """
         A dictionary of historicalData (might expand later)
         EXAMPLE:
         {'AAPL': HistoricalData object AAPL,
         'TSLA': HistoricalData object TELSA}
         """
-        self.orders = []
+        self.__orders = []
         """
         A list of Order objects
         """
@@ -39,3 +40,16 @@ class Algorithm:
     def after_trading(self) -> None:
         raise NotImplementedError(NOT_IMPL_MSG)
 
+    def add_order(self, o: Order) -> None:
+        if isinstance(o, Order):
+            self.__orders.append(o)
+
+    def get_orders(self) -> List[Order]:
+        return self.__orders
+
+    def add_data(self, key: str, d: Data):
+        if isinstance(d, Data):
+            self.__data[key] = d
+
+    def get_data(self, key: str):
+        return self.__data[key]
