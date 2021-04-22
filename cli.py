@@ -12,7 +12,7 @@ import click
 import os
 import sys
 from helpers.cli_helper import run_trade, current_stock_price, start_backtest, environ_checker, \
-    tests, current_coin_price, list_alpaca_assets
+    tests, current_coin_price, list_alpaca_assets, find_and_save_pairs, download_bars_data
 from pathlib import Path
 import logging
 from logging.config import fileConfig
@@ -123,7 +123,9 @@ def run_test():
 @click.option('--n', '--names', 'show_names', is_flag=True, default=False, type=bool, show_default=True)
 def list_stocks(shortable: bool, fractionable: bool, show_names: bool):
     """
-    Lists Alpaca Assets. Can be filtered in a variety of ways
+    Lists Alpaca Assets. Can be filtered in a variety of ways. '--s' shows all the shortable assets.
+    '--f' shows all assets which can be bought in fractions (not whole shares).
+    '--n' shows assets symbols with the name of the company.
     """
     logger.info("Getting lists of stocks")
     click.echo(f"  List of Alpaca Assets"
@@ -133,6 +135,31 @@ def list_stocks(shortable: bool, fractionable: bool, show_names: bool):
                f"{' and fractionable:' if fractionable and shortable else ':'}\n")
     resp = list_alpaca_assets(shortable=shortable, fractionable=fractionable, show_names=show_names)
     click.echo(f"{resp}\n\n   ++ Total: {len(resp)} ++")
+
+
+@cli.command(name="calc_pairs")
+def calc_pairs():
+    click.echo("Starting up Pairs finding algorithm. This may take a while")  # TODO make this a estimated time
+    find_and_save_pairs()
+
+
+@cli.command(name="download_data")
+@click.option('-t', '-timespan', 'timespan', default=180, type=int, show_default=True)
+@click.option('-s', '-syms', 'symbols', default=None, type=str, show_default=True) # TODO remove default
+@click.option('--r', '--replace', 'replace_old_data', is_flag=True, default=False, type=bool, show_default=True)
+def download_asset_data(timespan: int, symbols, replace_old_data):
+    click.echo("Starting Download into trade_bot/data/bars/ . This will take a while.")  # TODO make this a estimated time
+    if isinstance(symbols, str):
+        symbols = [symbols.upper()]
+    elif symbols is None:
+        click.echo("Do you want to download all tradeable stock from alpaca? There are about 1400 Stocks.")
+        ans = input("(y/N) -->")
+        if ans != 'y':
+            exit()
+    else:
+        exit()
+
+    download_bars_data(timespan=timespan, symbols=symbols, replace_old_data=replace_old_data)
 
 
 '''
@@ -163,5 +190,5 @@ if __name__ == '__main__':
     with open(config_file_path, 'r') as f:
         lines = f.readlines()
         if len(lines) > 1000:
-            click.echo(f"The length of the log file {config_file_path} is longer than 1000 lines. "
+            click.echo(f"The length of the log file ,{config_file_path}, is longer than 1000 lines. "
                        f"Consider purging the file.")

@@ -2,6 +2,8 @@
 migrations/
 pictures/
 logs/
+*.csv
+bars/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
