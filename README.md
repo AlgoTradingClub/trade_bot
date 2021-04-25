@@ -19,7 +19,7 @@ Apes Together!
 - numpy==1.20.1
 - click==7.1.2
 - pytest==6.2.2
-- alpaca-trade-api==1.0.1
+- alpaca-trade-api==1.2.0
 - pycoingecko==1.4.0
 
 
