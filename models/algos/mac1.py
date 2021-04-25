@@ -2,6 +2,7 @@ from models.Algo import Algorithm
 from models.Order import Order
 from models.BarsData import BarsData
 from models.Context import Context
+from models.DataManager import DataManager
 from typing import List
 from datetime import datetime, timedelta
 
@@ -9,15 +10,17 @@ from datetime import datetime, timedelta
 class MAC(Algorithm):
     def __init__(self):
         super(MAC, self).__init__()
+        self.dm = DataManager()
 
     def before_trading(self, first_trading_day: datetime, last_trading_day: datetime) -> None:
-        if not isinstance(self.data, dict) or 'AAPL' not in self.data:
-            hd = BarsData('AAPL')
-            data = self.AlpacaData.get_bars_data("AAPL")  # TODO needs to change
-            hd.load_df(data['AAPL'])
-            self.data['AAPL'] = hd
-        else:
-            self.data["AAPL"].check_date_range(first_trading_day, last_trading_day)
+        self.dm.set_data('ALPACA', "AAPL", first_trading_day, last_trading_day, 'day')
+        # if not isinstance(self.data, dict) or 'AAPL' not in self.data:
+        #     hd = BarsData('AAPL')
+        #     data = self.AlpacaData.get_bars_data("AAPL")  # TODO needs to change
+        #     hd.load_df(data['AAPL'])
+        #     self.data['AAPL'] = hd
+        # else:
+        #     self.data["AAPL"].check_date_range(first_trading_day, last_trading_day)
 
     def trade(self, today: datetime, context: Context) -> List[Order]:
         assert isinstance(today, datetime)
@@ -26,7 +29,7 @@ class MAC(Algorithm):
         previous = today - timedelta(days=window)
         iso = previous.strftime("%Y-%m-%d")
 
-        test = self.data["AAPL"].get_single_price(previous, flexible=True)
+        test = self.dm.get_single_price("AAPL", previous, flexible=True)
         rolling_test = self.data["AAPL"].get_rolling_average(previous, today)
         test2 = self.data["AAPL"].check_date_range(previous, today, flexible=True)
         curr = self.AlpacaData.get_bars_data("AAPL", timeframe='15Min', start=today, end=today, limit=5)

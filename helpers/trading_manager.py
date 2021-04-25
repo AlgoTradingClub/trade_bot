@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 
 strategies = [
         mac1,
-        pairs1,
-        MAC2
+        # pairs1,
+        # MAC2
     ]
 
 
