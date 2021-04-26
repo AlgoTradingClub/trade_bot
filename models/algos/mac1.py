@@ -30,17 +30,17 @@ class MAC(Algorithm):
         iso = previous.strftime("%Y-%m-%d")
 
         test = self.dm.get_single_price("AAPL", previous, flexible=True)
-        rolling_test = self.data["AAPL"].get_rolling_average(previous, today)
-        test2 = self.data["AAPL"].check_date_range(previous, today, flexible=True)
+        rolling_test = self.dm.get_single_price.get_rolling_average("AAPL", previous, today)
+        test2 = self.dm.check_date_range("AAPL", previous, today, flexible=True)
         curr = self.AlpacaData.get_bars_data("AAPL", timeframe='15Min', start=today, end=today, limit=5)
         curr_data = curr["AAPL"].at[curr["AAPL"].index[-1], 'close']  # getting most recent closing price
 
         if test < curr_data:
             # buy
-            self.orders.append(Order("buy", "AAPL", 1))
+            self.add_order((Order("buy", "AAPL", 1)))
         else:
             # sell
-            self.orders.append(Order("sell", "AAPL", 1))
+            self.add_order((Order("sell", "AAPL", 1)))
         return self.orders
 
     def after_trading(self) -> None:

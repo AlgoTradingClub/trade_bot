@@ -154,3 +154,6 @@ class BarsData(Data):
             return -1.0
         else:
             return sum(data_series.values) / len(data_series.values)
+
+    def get_current_price(self, now: datetime, flexible: bool = True):
+        assert isinstance(begin, datetime) and isinstance(end, datetime)

@@ -31,26 +31,33 @@ class DataManager:
                 asset = asset.upper()
                 self.__data[asset] = BarsData(asset)
                 ad = AlpacaData()
+                self.__data[asset].set_data_obj(ad)
                 self.__data[asset].load_df(ad.get_bars_data(asset)[asset])
             else:
                 ...
 
     def get_data(self, asset) -> Data:
-        if not asset in self.__data:
+        if asset not in self.__data:
             raise ValueError("Asset not found in data")
         else:
             return self.__data[asset]
 
-    def get_single_price(self, asset, date: datetime, flexible: bool = True) -> float:
-        if not asset in self.__data:
+    def get_single_price(self, asset: str, date: datetime, flexible: bool = True) -> float:
+        if asset not in self.__data:
             raise ValueError("Asset not found in data")
         else:
             return self.__data[asset].get_single_price(date, flexible)
 
-    def get_rolling_average(self, asset, start_date: datetime, end_date: datetime, flexible: bool = True) -> float:
-        if not asset in self.__data:
+    def get_rolling_average(self, asset: str, start_date: datetime, end_date: datetime, flexible: bool = True) -> float:
+        if asset not in self.__data:
             raise ValueError("Asset not found in data")
         else:
             return self.__data[asset].get_rolling_average(start_date, end_date, flexible)
+
+    def get_current_price(self, asset: str, now: datetime, flexible: bool = True):
+        if asset not in self.__data:
+            raise ValueError("Asset not found in data")
+        else:
+            return self.__data[asset].get_curent_price(now, flexible)
 
 
