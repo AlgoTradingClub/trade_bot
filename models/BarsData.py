@@ -13,7 +13,7 @@ class BarsData(Data):
     Also to reduce the time to test code so that it doesn't have to retrieve every time in "before_testing"
     """
     def __init__(self, symbol: str):
-        super(BarsData, self)
+        super().__init__(symbol, )
         self.symbol = symbol
         self.empty = True
         self.data = None

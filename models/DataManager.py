@@ -29,8 +29,9 @@ class DataManager:
             if source.upper() == "ALPACA":
                 from utils.Alpaca_Data import AlpacaData
                 asset = asset.upper()
-                self.__data[asset] = BarsData(asset)
                 ad = AlpacaData()
+                self.__data[asset] = {"data": BarsData(asset),
+                                      'src_obj': ad}
                 self.__data[asset].set_data_obj(ad)
                 self.__data[asset].load_df(ad.get_bars_data(asset)[asset])
             else:
@@ -40,7 +41,7 @@ class DataManager:
         if asset not in self.__data:
             raise ValueError("Asset not found in data")
         else:
-            return self.__data[asset]
+            return self.__data[asset]["Data"]
 
     def get_single_price(self, asset: str, date: datetime, flexible: bool = True) -> float:
         if asset not in self.__data:
@@ -60,4 +61,16 @@ class DataManager:
         else:
             return self.__data[asset].get_curent_price(now, flexible)
 
+    def check_date_range(self, asset: str, start_date: datetime, end_date: datetime):
+        """
 
+        :param asset:
+        :param start_date:
+        :param end_date:
+        :return:
+        """
+        pass
+
+
+# TODO I should keep the data object only concerned with data and the datamanager able to get more data if necessary
+#
