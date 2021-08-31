@@ -24,7 +24,8 @@ def current_stock_price(symbol: str):
     logger.debug("Getting price info")
     d = AlpacaData()
     today = datetime.today()
-    r = d.get_bars_data([symbol], timeframe='minute', start=today, end=today, limit=5)
+    r = d.get_bars_data([symbol], timeframe='minute',
+                        start=today, end=today, limit=5)
 
     if r[symbol].empty:
         account = AlpacaAccount()
@@ -62,25 +63,26 @@ def environ_checker() -> str:
     s = "API Keys Check:\n" + "-"*80 + "\n"
     for key in key_names:
         if key_names[key] in environ:
-            line = f"{key} Passed:".rjust(32, " ") + f" '{key_names[key]}' found in $PATH.\n"
+            line = f"{key} Passed:".rjust(
+                32, " ") + f" '{key_names[key]}' found in $PATH.\n"
         else:
             failed += 1
             line = f"{key} Failed:".rjust(32, " ") + f" Add '{key_names[key]}' in $PATH variable. " \
-                 f"See README.md ('Sign up for an alpaca account') for how to add variable to path. \n"
+                f"See README.md ('Sign up for an alpaca account') for how to add variable to path. \n"
         s += line
 
     s += "\nModule Check\n"
 
-    req_modules = ['pycoingecko', 'polygon-api-client', 'polygon-api-client',
-                   'requests', 'pandas', 'click', 'alpaca-trade-api']
+    req_modules = ['pycoingecko', 'polygon',
+                   'requests', 'pandas', 'click', 'alpaca_trade_api']
     for mod in req_modules:
         try:
             __import__(mod)
         except ImportError:
-            s += f"Failed: Module {mod} not found in virtual env \n"
+            s += f"❌ Failed: Module {mod} not found in virtual env \n"
             failed += 1
         else:
-            s += f"Passed: Module {mod} not found in virtual env \n"
+            s += f"✅ Passed: Module {mod} found in virtual env \n"
 
     s += "API Keys Check:\n" + "-" * 80
 
@@ -118,4 +120,5 @@ def download_bars_data(timespan: int, symbols: List[str] = None, replace_old_dat
     api.download_bars_data(str(data_dir), symbols, timespan, replace_old_data)
 
 
-
+def filter_stocks(minimum: float, maximum: float, timespan: int):
+    pass

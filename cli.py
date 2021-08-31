@@ -8,6 +8,7 @@ Does anyone have objection for this?
 This file could use the package pyCLI to automate the command line interface making process.
 maybe using 'click' or 'fire'. They seem a bit more friendly than 'argparse'
 '''
+from trade_bot.helpers.cli_helper import filter_stocks
 import click
 import os
 import sys
@@ -92,6 +93,7 @@ def get_stock_price(symbol):
     p = current_stock_price(symbol.upper())
     click.echo(p)
 
+
 @cli.command(name="coin")
 @click.argument('coin', type=str)
 @click.option('-c', '-curr', 'currency', default='usd', type=str, show_default=True)
@@ -103,7 +105,8 @@ def get_coin_price(coin, currency):
     :return: str
     """
     print("Retrieving Data")
-    logger.info(f"Retrieving data for symbol {coin.lower()} vs {currency.lower()}")
+    logger.info(
+        f"Retrieving data for symbol {coin.lower()} vs {currency.lower()}")
     p = current_coin_price(coin.lower(), currency.lower())
     click.echo(p)
 
@@ -116,6 +119,7 @@ def run_test():
     print("Interpreter Location: ", sys.executable)
     logger.info("Running tests")
     tests()
+
 
 @cli.command(name="list_stocks")
 @click.option('--s', '--shortable', 'shortable', is_flag=True, default=False, type=bool, show_default=True)
@@ -133,13 +137,15 @@ def list_stocks(shortable: bool, fractionable: bool, show_names: bool):
                f"{'shortable' if shortable else ''}"
                f"{'fractionable' if fractionable and not shortable else ''}"
                f"{' and fractionable:' if fractionable and shortable else ':'}\n")
-    resp = list_alpaca_assets(shortable=shortable, fractionable=fractionable, show_names=show_names)
+    resp = list_alpaca_assets(
+        shortable=shortable, fractionable=fractionable, show_names=show_names)
     click.echo(f"{resp}\n\n   ++ Total: {len(resp)} ++")
 
 
 @cli.command(name="calc_pairs")
 def calc_pairs():
-    click.echo("Starting up Pairs finding algorithm. This may take a while")  # TODO make this a estimated time
+    # TODO make this a estimated time
+    click.echo("Starting up Pairs finding algorithm. This may take a while")
     find_and_save_pairs()
 
 
@@ -155,14 +161,17 @@ def download_asset_data(timespan: int, symbols: str, replace_old_data: bool) -> 
     :param replace_old_data: Replace any existing data found in trade_bot/data/bars/
     :return: None
     """
-    click.echo("Starting Download into trade_bot/data/bars/ . This will take a while.")  # TODO make this a estimated time
+    click.echo(
+        "Starting Download into trade_bot/data/bars/ . This will take a while.")  # TODO make this a estimated time
     if symbols is None:
-        click.echo("Do you want to download all tradeable stock from alpaca? There are about 1400 Stocks.")
+        click.echo(
+            "Do you want to download all tradeable stock from alpaca? There are about 1400 Stocks.")
         ans = input("(y/N) -->")
         if ans != 'y':
             exit()
     elif not isinstance(symbols, str):
-        click.echo("Invalid symbol arg. Please type '-syms TSLA' for one stock or '-syms TSLA,AAPL,MSFT' for multiple")
+        click.echo(
+            "Invalid symbol arg. Please type '-syms TSLA' for one stock or '-syms TSLA,AAPL,MSFT' for multiple")
     elif ',' in symbols:
         symbols = symbols.split(',')
         symbols = list(map(lambda x: x.upper(), symbols))
@@ -171,7 +180,22 @@ def download_asset_data(timespan: int, symbols: str, replace_old_data: bool) -> 
     else:
         exit()
 
-    download_bars_data(timespan=timespan, symbols=symbols, replace_old_data=replace_old_data)
+    download_bars_data(timespan=timespan, symbols=symbols,
+                       replace_old_data=replace_old_data)
+
+
+@cli.command(name="filter")
+@click.option('-t', '-timespan', 'timespan', default=180, type=int, show_default=True)
+@click.option('-h', '-max', 'maximum', default=50, type=float, show_default=True)
+@click.option('-l', '-min', 'minimum', default=0, type=float, show_default=True)
+def filter_stock_pipeline(timespan: int, maximum: float, minimum: float) -> None:
+    """
+    Checks the available stocks on alpaca that meet a certain requirement
+    """
+    click.echo(
+        (f"Starting pipeline filter process . This will take a while."
+         "\nFinding all stock that have a max of {maximum} and min of {minimum} within the last {timespan} days"))
+    filter_stocks(timespan=timespan, minimum=maximum, maximum=minimum)
 
 
 '''
@@ -185,7 +209,7 @@ if __name__ == '__main__':
         '[%(asctime)s] %(levelname)-8s %(name)-12s %(message)s')
 
     currDir = Path(__file__).parent.absolute()
-    
+
     if 'logs' not in [file for file in os.listdir(currDir) if os.path.isdir(file)]:
         os.mkdir('logs')
     config_file_path = currDir / 'logs' / 'tradeBot.log'
