@@ -21,7 +21,7 @@ class MAC(Algorithm):
 
     def trade(self, today: datetime, context: Context) -> List[Order]:
         assert isinstance(today, datetime)
-        window = 7.0
+        window = 10.0
 
         previous = today - timedelta(days=window)
         iso = previous.strftime("%Y-%m-%d")
