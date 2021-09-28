@@ -12,4 +12,11 @@ def find_pairs(timespan: int = 365):
     api = AlpacaData()
     assets = account.list_assets(shortable=True, fractionable=True)
 
+    possible_pairs = []
+    for i in range(len(assets)):
+        for j in range(i + 1, len(assets)):
+            possible_pairs.append(f"doing analysis on {assets[i]} and {assets[j]}")
+
+    print(f"pairs calculated: {len(possible_pairs)}")
+
     print(f"Calculation completed. Data saved in {pairs_data}")
